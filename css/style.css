@@ -4,6 +4,7 @@ hr{margin:30px 0;}
 .carousel-inner {height:500px; background-color:#000;}
 .carousel-inner  .item{ height:500px;}
 .carousel-caption{margin-bottom:130px;}
+.carousel-caption p{font-size:20px;}
 #info-container{ margin-top:80px;}
 #info-container .col-md-4 {text-align:center; margin-bottom:20px;}
 #info-container .col-md-4 img{height:250px; width:100%;}
