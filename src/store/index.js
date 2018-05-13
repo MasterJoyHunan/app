@@ -5,8 +5,6 @@ import * as actions from './actions'
 import mutations from './mutations'
 import state from './state'
 import createLog from 'vuex/dist/logger'
-import { ToastPlugin } from 'vux'
-Vue.use(ToastPlugin)
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
 

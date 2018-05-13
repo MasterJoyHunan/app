@@ -16,3 +16,7 @@ export function changeTwoDecimal_f (x) {
     }
     return s_x
 }
+
+export function trueImgUrl(url) {
+    return url.replace(/\\/g, "/")
+}

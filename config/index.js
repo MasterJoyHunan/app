@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
       proxyTable: {
           '/api':{
-              target: 'http://twy4.web1.zwcat.cn/api',
+              target: 'http://localhost/web/public/shop',
               changeOrigin: true,
               pathRewrite: {
                   '^/api':'/'
@@ -21,7 +21,7 @@ module.exports = {
       },
 
     // Various Dev Server settings
-    host: '192.168.0.50', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST
     port: 9000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

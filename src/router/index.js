@@ -15,20 +15,25 @@ export default new Router({
                     path: 'index',
                     name: 'home',
                     component: () => import('@/components/index/index'),
-                    meta: {title: '主页', showBack: true, showMore: true, showTitle: true, showBottom: true}
+                    meta: {title: '主页', showMore: true, showTitle: true, showBottom: true}
                 },
                 {
-                    path: 'map',
-                    name: 'map',
-                    component: () => import('@/components/map/map'),
-                    meta: {title: '地图', showBack: true, showMore: false, showTitle: true, showBottom: false}
+                    path: 'cate',
+                    name: 'cate',
+                    component: () => import('@/components/cate/index'),
+                    meta: {title: '分类', showMore: true, showTitle: true, showBottom: true}
                 },
             ],
         },
         {
             path: '/login',
             name: 'login',
-            component: () => import('@/components/index/index'),
+            component: () => import('@/components/member/login/index'),
+        },
+        {
+            path: '/reg',
+            name: 'reg',
+            component: () => import('@/components/member/reg/index'),
         },
         {
             path: '/404',
