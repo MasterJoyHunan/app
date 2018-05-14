@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { Swiper, Divider } from 'vux'
+import { Swiper } from 'vux'
 import request from '@/components/common/js/request'
 import { trueImgUrl } from '@/components/common/js/public'
 const cdn = process.env.CDN
@@ -82,12 +82,11 @@ export default {
     },
     methods: {
         proDetail(item) {
-            console.log(item)
+            this.$router.push({path: '/product' , query: {id: item.id}})
         }
     },
     components: {
         Swiper,
-        Divider
     }
 }
 </script>

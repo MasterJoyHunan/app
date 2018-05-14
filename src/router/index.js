@@ -15,13 +15,19 @@ export default new Router({
                     path: 'index',
                     name: 'home',
                     component: () => import('@/components/index/index'),
-                    meta: {title: '主页', showMore: true, showTitle: true, showBottom: true}
+                    meta: {title: '主页', showTitle: true, showBottom: true, keepAlive: true }
+                },
+                {
+                    path: 'product',
+                    name: 'product',
+                    component: () => import('@/components/index/ProductDetail/index'),
+                    meta: {title: '商品详情', showTitle: true, showBack: true}
                 },
                 {
                     path: 'cate',
                     name: 'cate',
                     component: () => import('@/components/cate/index'),
-                    meta: {title: '分类', showMore: true, showTitle: true, showBottom: true}
+                    meta: {title: '分类', showTitle: true, showBottom: true, keepAlive: true }
                 },
             ],
         },
