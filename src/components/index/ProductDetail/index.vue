@@ -16,11 +16,11 @@
             <swiper-item class="swiper-img"
                 v-for="(item, index) in banner"
                 :key="index">
-                <img :src="item.img">
+                <img :src="item">
             </swiper-item>
         </swiper>
         <div class="divider">商品详情</div>
-        <div class="content"
+        <div class="description"
             v-html="product.desc"></div>
         <div class="choose-sku-masker"
             v-if="buyPlant">
@@ -30,7 +30,7 @@
                     <svg-icon icon-class="close"
                         size="30"></svg-icon>
                 </div>
-                <div class="top vux-1px">
+                <div class="top vux-1px-b">
                     <div class="img"></div>
                     <div class="content">
                         <p class="price">¥ 100</p>
@@ -38,8 +38,18 @@
                         <p class="sales">销量 999 件</p>
                     </div>
                 </div>
-                <div class="sku"></div>
-                <div class="sku"></div>
+                <div class="sku vux-1px-b"
+                    v-show="sku1.length > 0">
+                    <div class="item"
+                        v-for=" (item, index) in sku1"
+                        :key="index">{{item.name}}</div>
+                </div>
+                <div class="sku vux-1px-b"
+                    v-show="sku2.length > 0">
+                    <div class="item"
+                        v-for=" (item, index) in sku2"
+                        :key="index">{{item.name}}</div>
+                </div>
                 <div class="buy-num">
                     <p>购买数量</p>
                     <inline-x-number button-style="round"
@@ -80,7 +90,9 @@ export default {
             product: {},
             banner: [],
             buyPlant: false,
-            buyNum: 1
+            buyNum: 1,
+            sku1: [],
+            sku2: []
         }
     },
     created() {
@@ -113,12 +125,31 @@ export default {
                 this.product = res.data
                 const arr = this.product.imgs.split('|')
                 arr.map(item => {
-                    this.banner.push({ img: cdn + trueImgUrl(item), url: 'javascript:;' })
+                    this.banner.push(cdn + trueImgUrl(item))
                 })
+                if (this.product.sku.length > 0) {
+                    const tempSku1 = []
+                    const tempSku2 = []
+                    this.product.sku.map(item => {
+                        if (item.sku_id_1 > 0) {
+                            if (!tempSku1[item.sku_id_1]) {
+                                this.sku1.push(item.sku1)
+                                tempSku1[item.sku_id_1] = true
+                            }
+                        }
+                        if (item.sku_id_2 > 0) {
+                            if (!tempSku2[item.sku_id_2]) {
+                                this.sku2.push(item.sku2)
+                                tempSku2[item.sku_id_2] = true
+                            }
+                        }
+                    })
+                }
+                console.log(this.sku1, this.sku2)
             }).catch(err => {
                 this.$vux.alert.show('系统异常')
             })
-        }
+        },
     },
     computed: {
     },
@@ -137,7 +168,7 @@ export default {
 #detail {
     padding-bottom: 53px;
     .swiper {
-        .vux-swiper{
+        .vux-swiper {
             padding-bottom: 40% !important;
         }
         .swiper-img {
@@ -169,7 +200,9 @@ export default {
             }
         }
     }
-    .content {
+    .sku{
+    }
+    .description {
         padding: 0 10px;
         img {
             width: 100%;
