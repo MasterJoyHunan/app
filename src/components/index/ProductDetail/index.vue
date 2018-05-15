@@ -2,27 +2,52 @@
     <div id="detail">
         <div class="info">
             <p class="title">{{product.title}}</p>
-            <!-- <p class="sales">
-                <rater :value="5"
-                    disabled
-                    :font-size="17"></rater> <span class="volume">销量: {{product.sales_volume}}</span></p> -->
             <p class="price">¥{{product.price}}
                 <span>¥{{product.market_price}}</span>
             </p>
         </div>
-        <swiper :list="banner"
-            loop
+        <swiper loop
             auto
             dots-position="center"
             :show-dots="banner.length > 1 ? true : false"
             :show-desc-mask="false"
-            :aspect-ratio="500/800">
+            class="swiper"
+            height="padding-bottom: 40%">
+            <swiper-item class="swiper-img"
+                v-for="(item, index) in banner"
+                :key="index">
+                <img :src="item.img">
+            </swiper-item>
         </swiper>
         <div class="divider">商品详情</div>
         <div class="content"
             v-html="product.desc"></div>
-        <div class="plant">
-
+        <div class="choose-sku-masker"
+            v-if="buyPlant">
+            <div class="plant">
+                <div class="close"
+                    @click="close()">
+                    <svg-icon icon-class="close"
+                        size="30"></svg-icon>
+                </div>
+                <div class="top vux-1px">
+                    <div class="img"></div>
+                    <div class="content">
+                        <p class="price">¥ 100</p>
+                        <p class="stock">库存 999 件</p>
+                        <p class="sales">销量 999 件</p>
+                    </div>
+                </div>
+                <div class="sku"></div>
+                <div class="sku"></div>
+                <div class="buy-num">
+                    <p>购买数量</p>
+                    <inline-x-number button-style="round"
+                        :min="1"
+                        v-model="buyNum"></inline-x-number>
+                </div>
+                <div class="button">确定</div>
+            </div>
         </div>
         <div class="bottom">
             <div class="cart"
@@ -44,7 +69,7 @@
 </template>
 
 <script>
-import { Swiper, Rater, Badge } from 'vux'
+import { Swiper, SwiperItem, Rater, Badge, InlineXNumber } from 'vux'
 import request from '@/components/common/js/request'
 import { trueImgUrl } from '@/components/common/js/public'
 const cdn = process.env.CDN
@@ -54,6 +79,8 @@ export default {
         return {
             product: {},
             banner: [],
+            buyPlant: false,
+            buyNum: 1
         }
     },
     created() {
@@ -67,10 +94,15 @@ export default {
             this.$router.push('/cart')
         },
         putCart() {
+            this.buyPlant = true
             console.log('put')
         },
         buyNow() {
+            this.buyPlant = true
             console.log('buy')
+        },
+        close() {
+            this.buyPlant = false
         },
         _getData() {
             request({
@@ -93,36 +125,40 @@ export default {
     components: {
         Swiper,
         Rater,
-        Badge
+        Badge,
+        InlineXNumber,
+        SwiperItem
     }
 }
 </script>
 
 <style lang="less">
+@import "~vux/src/styles/1px.less";
 #detail {
     padding-bottom: 53px;
+    .swiper {
+        .vux-swiper{
+            padding-bottom: 40% !important;
+        }
+        .swiper-img {
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
     .info {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        // background-color: #fff;
-        padding-left: 20px;
         p {
             margin-top: 10px;
         }
         .title {
             font-size: 18px;
         }
-        // .sales{
-        //     font-size: 15px;
-        //     .volume{
-        //         color: #767676;
-        //         margin-left: 10px;
-        //     }
-        // }
         .price {
-            // color: #ed4434;
             font-size: 20px;
             margin-bottom: 10px;
             span {
@@ -135,9 +171,6 @@ export default {
     }
     .content {
         padding: 0 10px;
-        p {
-            line-height: 0;
-        }
         img {
             width: 100%;
         }
@@ -158,7 +191,72 @@ export default {
             border-top: 1px solid #ccc;
         }
     }
-    .plant {
+    .choose-sku-masker {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #cccccca1;
+        z-index: 2;
+        .plant {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            min-height: 50%;
+            padding-bottom: 53px;
+            background-color: #fff;
+            .close {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                z-index: 2;
+            }
+            .top {
+                width: 100%;
+                height: 150px;
+                .img {
+                    position: absolute;
+                    left: 20px;
+                    top: -20px;
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 5px;
+                    background-color: #ed4434;
+                }
+                .content {
+                    margin-left: 180px;
+                    height: 150px;
+                    font-size: 16px;
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    .price {
+                        color: red;
+                        font-size: 18px;
+                    }
+                }
+            }
+            .buy-num {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                padding: 20px;
+            }
+            .button {
+                width: 100%;
+                height: 53px;
+                color: #fff;
+                position: absolute;
+                bottom: 0;
+                background-color: #ff0036;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
     }
     .bottom {
         width: 100%;

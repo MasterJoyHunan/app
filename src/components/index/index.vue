@@ -125,6 +125,7 @@ export default {
                 overflow: hidden;
                 border-radius: 5px;
                 background-color: #ddd;
+                box-shadow: 0 0 3px #000;
                 .blur {
                     width: 100%;
                     height: 100%;
