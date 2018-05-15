@@ -120,7 +120,7 @@ export default {
 
 <style lang="less">
 #my-index {
-    background-color: #e9f6fe;
+    // background-color: #e9f6fe;
     .my-header {
         background-color: #fff;
         .vux-header-title {

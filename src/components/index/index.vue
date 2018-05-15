@@ -14,9 +14,9 @@
                 <div class="masker"
                     :style="{backgroundImage: `url(${pro.img})`}"></div>
                 <div class="blur-container">
-                    <div class="blur"
+                    <!-- <div class="blur"
                         :style="{backgroundImage: `url(${pro.img})`}">
-                    </div>
+                    </div> -->
                 </div>
                 <div class="text-info">
                     <p class="title">{{pro.title}}</p>
@@ -124,6 +124,7 @@ export default {
                 right: 0;
                 overflow: hidden;
                 border-radius: 5px;
+                background-color: #ddd;
                 .blur {
                     width: 100%;
                     height: 100%;
@@ -141,7 +142,7 @@ export default {
                 top: 0;
                 bottom: 0;
                 right: 0;
-                color: #fff;
+                color: #000;
                 .title {
                     font-size: 18px;
                 }
@@ -154,7 +155,6 @@ export default {
                     }
                     .market-price {
                         font-size: 12px;
-                        color: #fff;
                         vertical-align: top;
                         text-decoration: line-through;
                     }

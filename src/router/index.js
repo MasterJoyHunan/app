@@ -21,7 +21,7 @@ export default new Router({
                     path: 'product',
                     name: 'product',
                     component: () => import('@/components/index/ProductDetail/index'),
-                    meta: {title: '商品详情', showTitle: true, showBack: true}
+                    // meta: {title: '商品详情', showTitle: true, showBack: true}
                 },
                 {
                     path: 'cate',
