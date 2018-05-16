@@ -32,7 +32,10 @@
                         size="30"></svg-icon>
                 </div>
                 <div class="top vux-1px-b">
-                    <div class="img"></div>
+                    <div class="img">
+                        <img :src="cdn + miniImg"
+                            alt="">
+                    </div>
                     <div class="content">
                         <p class="price">¥ {{price}}</p>
                         <p class="stock">库存 {{stock}} 件</p>
@@ -44,6 +47,8 @@
                     <div class="sku vux-1px-b"
                         v-show="sku1.length > 0">
                         <checker v-model="chooseSku1"
+                            radio-required
+                            @on-change="resetInfo()"
                             type="radio"
                             default-item-class="sku-item"
                             selected-item-class="sku-item-selected">
@@ -55,6 +60,8 @@
                     <div class="sku vux-1px-b"
                         v-show="sku2.length > 0">
                         <checker v-model="chooseSku2"
+                            radio-required
+                            @on-change="resetInfo()"
                             type="radio"
                             default-item-class="sku-item"
                             selected-item-class="sku-item-selected">
@@ -101,14 +108,16 @@ export default {
     name: 'detail',
     data() {
         return {
+            cdn: cdn,
             product: {},
             banner: [],
             buyPlant: false,
             buyNum: 1,
             sku1: [],
             sku2: [],
-            chooseSku1: [],
-            chooseSku2: [],
+            chooseSku1: {},
+            chooseSku2: {},
+            miniImg: '',
             price: 0,
             stock: 0,
             sales: 0,
@@ -117,26 +126,70 @@ export default {
     created() {
         this._getData()
     },
-    mounted() {
-    },
     methods: {
+        //filter方法
         trueImgUrl(url) {
             return cdn + trueImgUrl(url)
         },
+        // 跳转到购物车
         gotoCart() {
             this.$router.push('/cart')
         },
+        // 加入到购物车
         putCart() {
             this.buyPlant = true
             console.log('put')
         },
+        // 立即购买
         buyNow() {
             this.buyPlant = true
             console.log('buy')
         },
+        // 关闭购买
         close() {
             this.buyPlant = false
         },
+        // 重新渲染图片, 销量,库存
+        resetInfo() {
+            if (this.sku1.length > 0 && this.sku2.length == 0) {
+                if (Object.keys(this.chooseSku1).length > 0) {
+                    this.product.sku.map(item => {
+                        if (item.sku_id_1 == this.chooseSku1.id) {
+                            this.miniImg = item.img
+                            this.price = item.price
+                            this.stock = item.stock
+                            this.sales = item.sales_volume
+                            return
+                        }
+                    })
+                }
+            } else if (this.sku1.length > 0 && this.sku2.length > 0) {
+                if (Object.keys(this.chooseSku1).length > 0 && Object.keys(this.chooseSku2).length > 0) {
+                    this.product.sku.map(item => {
+                        if (item.sku_id_1 == this.chooseSku1.id && item.sku_id_2 == this.chooseSku2.id) {
+                            this.miniImg = item.img
+                            this.price = item.price
+                            this.stock = item.stock
+                            this.sales = item.sales_volume
+                            return
+                        }
+                    })
+                }
+            } else if (this.sku1.length == 0 && this.sku2.length > 0) {
+                if (Object.keys(this.chooseSku2).length > 0) {
+                    this.product.sku.map(item => {
+                        if (item.sku_id_2 == this.chooseSku2.id) {
+                            this.miniImg = item.img
+                            this.price = item.price
+                            this.stock = item.stock
+                            this.sales = item.sales_volume
+                            return
+                        }
+                    })
+                }
+            }
+        },
+        // 获取数据
         _getData() {
             request({
                 url: '/api/shop/getProductDetail',
@@ -151,6 +204,7 @@ export default {
                 this.price = this.product.price
                 this.stock = this.product.stock
                 this.sales = this.product.sales_volume
+                this.miniImg = this.product.img
                 if (this.product.sku.length > 0) {
                     const tempSku1 = []
                     const tempSku2 = []
@@ -177,6 +231,7 @@ export default {
     computed: {
     },
     watch: {
+        // CSS不熟, 只能用JS解决SKU选择菜单的时候的高度
         buyPlant(newVla, oldVal) {
             if (newVla === true) {
                 this.$nextTick(() => {
@@ -283,13 +338,19 @@ export default {
                 width: 100%;
                 height: 150px;
                 .img {
+                    background: #fff;
                     position: absolute;
                     left: 20px;
                     top: -20px;
                     width: 150px;
                     height: 150px;
                     border-radius: 5px;
-                    background-color: #ed4434;
+                    box-shadow: 0 0 3px #000;
+                    img {
+                        border-radius: 5px;
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
                 .content {
                     margin-left: 180px;

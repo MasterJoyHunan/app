@@ -107,6 +107,7 @@ export default {
             .masker {
                 position: absolute;
                 background-size: 100% 100%;
+                background-color: #fff;
                 width: 40%;
                 top: 0;
                 bottom: 0;
