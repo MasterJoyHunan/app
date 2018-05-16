@@ -23,8 +23,9 @@
         <div class="description"
             v-html="product.desc"></div>
         <div class="choose-sku-masker"
-            v-if="buyPlant">
-            <div class="plant">
+            v-show="buyPlant">
+            <div class="plant"
+                ref="plant">
                 <div class="close"
                     @click="close()">
                     <svg-icon icon-class="close"
@@ -33,28 +34,41 @@
                 <div class="top vux-1px-b">
                     <div class="img"></div>
                     <div class="content">
-                        <p class="price">¥ 100</p>
-                        <p class="stock">库存 999 件</p>
-                        <p class="sales">销量 999 件</p>
+                        <p class="price">¥ {{price}}</p>
+                        <p class="stock">库存 {{stock}} 件</p>
+                        <p class="sales">销量 {{sales}} 件</p>
                     </div>
                 </div>
-                <div class="sku vux-1px-b"
-                    v-show="sku1.length > 0">
-                    <div class="item"
-                        v-for=" (item, index) in sku1"
-                        :key="index">{{item.name}}</div>
-                </div>
-                <div class="sku vux-1px-b"
-                    v-show="sku2.length > 0">
-                    <div class="item"
-                        v-for=" (item, index) in sku2"
-                        :key="index">{{item.name}}</div>
-                </div>
-                <div class="buy-num">
-                    <p>购买数量</p>
-                    <inline-x-number button-style="round"
-                        :min="1"
-                        v-model="buyNum"></inline-x-number>
+                <div class="body"
+                    ref="body">
+                    <div class="sku vux-1px-b"
+                        v-show="sku1.length > 0">
+                        <checker v-model="chooseSku1"
+                            type="radio"
+                            default-item-class="sku-item"
+                            selected-item-class="sku-item-selected">
+                            <checker-item :value="item"
+                                v-for="(item, index) in sku1"
+                                :key="index">{{item.name}}</checker-item>
+                        </checker>
+                    </div>
+                    <div class="sku vux-1px-b"
+                        v-show="sku2.length > 0">
+                        <checker v-model="chooseSku2"
+                            type="radio"
+                            default-item-class="sku-item"
+                            selected-item-class="sku-item-selected">
+                            <checker-item :value="item"
+                                v-for="(item, index) in sku2"
+                                :key="index">{{item.name}}</checker-item>
+                        </checker>
+                    </div>
+                    <div class="buy-num">
+                        <p>购买数量</p>
+                        <inline-x-number button-style="round"
+                            :min="1"
+                            v-model="buyNum"></inline-x-number>
+                    </div>
                 </div>
                 <div class="button">确定</div>
             </div>
@@ -79,7 +93,7 @@
 </template>
 
 <script>
-import { Swiper, SwiperItem, Rater, Badge, InlineXNumber } from 'vux'
+import { Swiper, SwiperItem, Rater, Badge, InlineXNumber, Checker, CheckerItem } from 'vux'
 import request from '@/components/common/js/request'
 import { trueImgUrl } from '@/components/common/js/public'
 const cdn = process.env.CDN
@@ -92,11 +106,18 @@ export default {
             buyPlant: false,
             buyNum: 1,
             sku1: [],
-            sku2: []
+            sku2: [],
+            chooseSku1: [],
+            chooseSku2: [],
+            price: 0,
+            stock: 0,
+            sales: 0,
         }
     },
     created() {
         this._getData()
+    },
+    mounted() {
     },
     methods: {
         trueImgUrl(url) {
@@ -127,6 +148,9 @@ export default {
                 arr.map(item => {
                     this.banner.push(cdn + trueImgUrl(item))
                 })
+                this.price = this.product.price
+                this.stock = this.product.stock
+                this.sales = this.product.sales_volume
                 if (this.product.sku.length > 0) {
                     const tempSku1 = []
                     const tempSku2 = []
@@ -145,7 +169,6 @@ export default {
                         }
                     })
                 }
-                console.log(this.sku1, this.sku2)
             }).catch(err => {
                 this.$vux.alert.show('系统异常')
             })
@@ -153,12 +176,23 @@ export default {
     },
     computed: {
     },
+    watch: {
+        buyPlant(newVla, oldVal) {
+            if (newVla === true) {
+                this.$nextTick(() => {
+                    this.$refs.body.style.height = this.$refs.plant.clientHeight - 203 + 'px'
+                })
+            }
+        }
+    },
     components: {
         Swiper,
         Rater,
         Badge,
         InlineXNumber,
-        SwiperItem
+        SwiperItem,
+        Checker,
+        CheckerItem
     }
 }
 </script>
@@ -200,8 +234,6 @@ export default {
             }
         }
     }
-    .sku{
-    }
     .description {
         padding: 0 10px;
         img {
@@ -230,7 +262,7 @@ export default {
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: #cccccca1;
+        background-color: rgba(204, 204, 204, 0.8);
         z-index: 2;
         .plant {
             position: absolute;
@@ -238,6 +270,7 @@ export default {
             left: 0;
             right: 0;
             min-height: 50%;
+            max-height: 80%;
             padding-bottom: 53px;
             background-color: #fff;
             .close {
@@ -269,6 +302,25 @@ export default {
                     .price {
                         color: red;
                         font-size: 18px;
+                    }
+                }
+            }
+            .body {
+                overflow: scroll;
+                .sku {
+                    padding: 10px 10px 0 10px;
+                    .sku-item {
+                        border: 1px solid #ccc;
+                        border-radius: 10px;
+                        background-color: #e9f6fe;
+                        margin: 0 5px 10px 5px;
+                        padding: 5px 15px;
+                    }
+                    .sku-item-selected {
+                        border-radius: 10px;
+                        background-color: #ff0036;
+                        color: #fff;
+                        border: 1px solid #ff0036;
                     }
                 }
             }

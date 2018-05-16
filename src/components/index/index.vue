@@ -82,7 +82,7 @@ export default {
     },
     methods: {
         proDetail(item) {
-            this.$router.push({path: '/product' , query: {id: item.id}})
+            this.$router.push({ path: '/product', query: { id: item.id } })
         }
     },
     components: {
@@ -145,6 +145,7 @@ export default {
                 right: 0;
                 color: #000;
                 .title {
+                    text-align: center;
                     font-size: 18px;
                 }
                 .price {
