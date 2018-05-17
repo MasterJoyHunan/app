@@ -163,7 +163,7 @@ export default {
                 this.initCart()
                 this.buyPlant = false
             }).catch(err => {
-                this.$vux.alert.show('系统异常')
+                console.log(err)
             })
         },
         // 重新渲染图片, 销量,库存

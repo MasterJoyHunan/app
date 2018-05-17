@@ -8,7 +8,7 @@
                     slot="right-menu">
                     <swipeout-button class="delete-menu">
                         <svg-icon icon-class="delete"
-                            color="red"
+                            color="#ccc"
                             size="26"></svg-icon>
                     </swipeout-button>
                 </div>
@@ -24,9 +24,8 @@
                         <p v-if="getSku(item)"
                             class="sku">规格: {{getSku(item)}}</p>
                         <p v-else> &nbsp;</p>
-                        <p class="price">价格:
-                            <span>¥{{getPrice(item)}}</span>
-                            <number size="15"></number>
+                        <p class="price">价格: ¥{{getPrice(item)}}
+                            <number size="15" @add="add(item, 1)" @min="add(item, 0)"></number>
                         </p>
 
                     </div>
@@ -62,7 +61,6 @@ export default {
         if (this.cart.length == 0) {
             this.initCart()
         }
-        console.log(this.cart.length)
     },
     computed: {
         ...mapGetters(['cart'])
@@ -79,6 +77,10 @@ export default {
         },
         gotoPro(id) {
             this.$router.push({ path: '/product', query: { id: id } })
+        },
+        add(item, flag) {
+            console.log(item)
+            console.log(flag)
         },
         ...mapActions(['initCart']),
     },
@@ -105,8 +107,9 @@ export default {
             font-size: 15px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: stretch;
             .vux-check-icon {
+                align-self: center;
                 flex-basis: 10%;
             }
             .img {
@@ -119,22 +122,31 @@ export default {
                 box-shadow: 0 0 3px #000;
             }
             .text-content {
-                flex-basis: 60%;
+                padding-left: 3%;
+                flex-basis: 50%;
                 display: flex;
                 font-size: 12px;
                 justify-content: center;
                 flex-direction: column;
                 align-items: flex-start;
                 p {
-                    flex: 1;
+                    justify-content: center;
+                    display: flex;
+                    align-items: center;
                 }
                 .title {
+                    flex: 2;
                     font-size: 15px;
+                    text-align: center;
                     color: #000;
                 }
-                .vux-inline-x-number {
-                    align-self: flex-end;
-                    margin-right: 15px;
+                .sku{
+                    flex: 1;
+                }
+                .price{
+                    flex: 1;
+                    width: 100%;
+                    justify-content: space-between;
                 }
             }
         }

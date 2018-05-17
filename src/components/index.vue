@@ -32,28 +32,28 @@
                 class="bottom"
                 v-show="showBottom">
                 <tabbar-item :link="{path:'/index'}"
-                    :selected="active1">
+                    :selected="path == '/index'">
                     <svg-icon icon-class="home"
                         size="26"
                         slot="icon"></svg-icon>
                     <span slot="label">商城</span>
                 </tabbar-item>
                 <tabbar-item :link="{path:'/cate'}"
-                    :selected="active2">
+                    :selected="path == '/cate'">
                     <svg-icon icon-class="cate"
                         size="26"
                         slot="icon"></svg-icon>
                     <span slot="label">分类</span>
                 </tabbar-item>
                 <tabbar-item :link="{path:'/cart'}"
-                    :selected="active3">
+                    :selected="path == '/cart'">
                     <svg-icon icon-class="cart"
                         size="26"
                         slot="icon"></svg-icon>
                     <span slot="label">购物车</span>
                 </tabbar-item>
                 <tabbar-item :link="{path:'/member'}"
-                    :selected="active4">
+                    :selected="path == '/member'">
                     <svg-icon icon-class="member"
                         size="26"
                         slot="icon"></svg-icon>
@@ -70,12 +70,13 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'index',
+    created() {
+        const urlArr = location.href.split('#')
+        this.path = urlArr[1]
+    },
     data() {
         return {
-            active1: true,
-            active2: false,
-            active3: false,
-            active4: false,
+            path: '/index'
         }
     },
     methods: {
@@ -83,17 +84,9 @@ export default {
             this.$router.back()
         },
         fetchDate(to, from) {
-            if (to.path == '/index') {
-                this.active1 = true
-            } else if (to.path == '/shop') {
-                this.active2 = true
-            } else if (to.path == '/cart') {
-                this.active3 = true
-            } else if (to.path == '/member') {
-                this.active4 = true
-            }
-        }
-
+            [this.active1, this.active2, this.active3, this.active4] = [false, false, false, false]
+            this.path = to.path
+        },
     },
     computed: {
         leftButton() {
