@@ -77,7 +77,8 @@
                             v-model="buyNum"></inline-x-number>
                     </div>
                 </div>
-                <div class="button">确定</div>
+                <div class="button"
+                    @click="onSubmit()">确定</div>
             </div>
         </div>
         <div class="bottom">
@@ -102,7 +103,7 @@
 
 <script>
 import { Swiper, SwiperItem, Rater, Badge, InlineXNumber, Checker, CheckerItem } from 'vux'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import request from '@/components/common/js/request'
 import { trueImgUrl } from '@/components/common/js/public'
 const cdn = process.env.CDN
@@ -123,6 +124,7 @@ export default {
             price: 0,
             stock: 0,
             sales: 0,
+            pro_sku_id: 0,
         }
     },
     created() {
@@ -151,6 +153,19 @@ export default {
         close() {
             this.buyPlant = false
         },
+        // 购物提交, 立即购买提交
+        onSubmit() {
+            request({
+                url: "/api/cart/addToCart",
+                method: 'post',
+                data: { pro_id: this.product.id, num: this.buyNum, pro_sku_id: this.pro_sku_id }
+            }).then(res => {
+                this.initCart()
+                this.buyPlant = false
+            }).catch(err => {
+                this.$vux.alert.show('系统异常')
+            })
+        },
         // 重新渲染图片, 销量,库存
         resetInfo() {
             if (this.sku1.length > 0 && this.sku2.length == 0) {
@@ -161,6 +176,7 @@ export default {
                             this.price = item.price
                             this.stock = item.stock
                             this.sales = item.sales_volume
+                            this.pro_sku_id = item.id
                             return
                         }
                     })
@@ -173,6 +189,7 @@ export default {
                             this.price = item.price
                             this.stock = item.stock
                             this.sales = item.sales_volume
+                            this.pro_sku_id = item.id
                             return
                         }
                     })
@@ -185,6 +202,7 @@ export default {
                             this.price = item.price
                             this.stock = item.stock
                             this.sales = item.sales_volume
+                            this.pro_sku_id = item.id
                             return
                         }
                     })
@@ -195,7 +213,7 @@ export default {
         _getData() {
             request({
                 url: '/api/shop/getProductDetail',
-                methods: 'get',
+                method: 'get',
                 params: { id: this.$route.query.id }
             }).then(res => {
                 this.product = res.data
@@ -229,6 +247,7 @@ export default {
                 this.$vux.alert.show('系统异常')
             })
         },
+        ...mapActions(['initCart'])
     },
     computed: {
         ...mapGetters(['cartNum'])
