@@ -19,6 +19,18 @@ const mutations = {
     [types.SET_SHOW_BOTTOM] (state, flag) {
         state.showBottom = flag
     },
+    [types.INIT_CART] (state, cart) {
+        state.cart = cart
+    },
+    [types.JOIN_TO_CART] (state, pro) {
+        state.cart.push(pro)
+    },
+    [types.JOIN_TO_CART] (state, index) {
+        state.cart.splice(index, 1)
+    },
+    [types.CLEAR_CART] (state) {
+        state.cart = []
+    },
 
 }
 

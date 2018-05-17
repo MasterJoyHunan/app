@@ -87,7 +87,8 @@
                     color="52b983"
                     size="40"></svg-icon>
                 <badge class="badge"
-                    text="99"></badge>
+                    v-if="cartNum > 0"
+                    :text="cartNum"></badge>
             </div>
             <div class="buy">
                 <div class="put-cart"
@@ -101,6 +102,7 @@
 
 <script>
 import { Swiper, SwiperItem, Rater, Badge, InlineXNumber, Checker, CheckerItem } from 'vux'
+import { mapGetters } from 'vuex'
 import request from '@/components/common/js/request'
 import { trueImgUrl } from '@/components/common/js/public'
 const cdn = process.env.CDN
@@ -229,6 +231,7 @@ export default {
         },
     },
     computed: {
+        ...mapGetters(['cartNum'])
     },
     watch: {
         // CSS不熟, 只能用JS解决SKU选择菜单的时候的高度

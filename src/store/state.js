@@ -5,5 +5,7 @@ const state = {
     showMore: false, //是否显示更多按钮
     showBottom: false, //是否显示更多按钮
     user: {}, //用户信息
+    cart: [],
+    cartNum: 0,
 }
 export default state

@@ -6,3 +6,9 @@ export const reloadUser = ({commit})=>{
         commit(types.SET_USER_INFO, res.data.user)
     })
 }
+
+export const initCart = ({commit})=>{
+    request({url: '/api/cart/index'}).then(res=>{
+        commit(types.INIT_CART, res.data)
+    })
+}
