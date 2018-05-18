@@ -74,10 +74,13 @@
                         <p>购买数量</p>
                         <inline-x-number button-style="round"
                             :min="1"
+                            :max="stock"
                             v-model="buyNum"></inline-x-number>
                     </div>
                 </div>
                 <div class="button"
+                    ref="submitBtn"
+                    :style="{backgroundColor: buyDisable ? '#ccc' : '#ff0036'}"
                     @click="onSubmit()">确定</div>
             </div>
         </div>
@@ -125,6 +128,7 @@ export default {
             stock: 0,
             sales: 0,
             pro_sku_id: 0,
+            buyDisable: false,
         }
     },
     created() {
@@ -155,6 +159,9 @@ export default {
         },
         // 购物提交, 立即购买提交
         onSubmit() {
+            if (this.buyDisable) {
+                return
+            }
             request({
                 url: "/api/cart/addToCart",
                 method: 'post',
@@ -170,7 +177,7 @@ export default {
         resetInfo() {
             if (this.sku1.length > 0 && this.sku2.length == 0) {
                 if (Object.keys(this.chooseSku1).length > 0) {
-                    this.product.sku.map(item => {
+                    for (const item of this.product.sku) {
                         if (item.sku_id_1 == this.chooseSku1.id) {
                             this.miniImg = item.img
                             this.price = item.price
@@ -179,11 +186,11 @@ export default {
                             this.pro_sku_id = item.id
                             return
                         }
-                    })
+                    }
                 }
             } else if (this.sku1.length > 0 && this.sku2.length > 0) {
                 if (Object.keys(this.chooseSku1).length > 0 && Object.keys(this.chooseSku2).length > 0) {
-                    this.product.sku.map(item => {
+                    for (const item of this.product.sku) {
                         if (item.sku_id_1 == this.chooseSku1.id && item.sku_id_2 == this.chooseSku2.id) {
                             this.miniImg = item.img
                             this.price = item.price
@@ -192,11 +199,11 @@ export default {
                             this.pro_sku_id = item.id
                             return
                         }
-                    })
+                    }
                 }
             } else if (this.sku1.length == 0 && this.sku2.length > 0) {
                 if (Object.keys(this.chooseSku2).length > 0) {
-                    this.product.sku.map(item => {
+                    for (const item of this.product.sku) {
                         if (item.sku_id_2 == this.chooseSku2.id) {
                             this.miniImg = item.img
                             this.price = item.price
@@ -205,7 +212,7 @@ export default {
                             this.pro_sku_id = item.id
                             return
                         }
-                    })
+                    }
                 }
             }
         },
@@ -243,6 +250,7 @@ export default {
                         }
                     })
                 }
+                this.buyDisable = (this.stock == 0)
             }).catch(err => {
                 this.$vux.alert.show('系统异常')
             })
@@ -260,6 +268,9 @@ export default {
                     this.$refs.body.style.height = this.$refs.plant.clientHeight - 203 + 'px'
                 })
             }
+        },
+        stock(newVal) {
+            this.buyDisable = (newVal == 0)
         }
     },
     components: {

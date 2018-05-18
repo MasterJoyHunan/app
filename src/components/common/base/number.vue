@@ -64,10 +64,10 @@ export default {
     },
     computed: {
         nowMinColor() {
-            return this.value == this.min ? this.disableColr : this.color
+            return this.value <= this.min ? this.disableColr : this.color
         },
         nowAddColor() {
-            return this.value == this.max ? this.disableColr : this.color
+            return this.value >= this.max ? this.disableColr : this.color
         }
     }
 }

@@ -31,8 +31,11 @@
                                     <div v-else> &nbsp;</div>
                                     <div class="price">价格: ¥{{getPrice(item)}}</div>
                                     <number size="15"
-                                        @add="add(item, 1)"
-                                        @min="add(item, 0)"></number>
+                                        :min="1"
+                                        :max="getStock(item)"
+                                        :value="item.num"
+                                        @add="add(item, index, 1)"
+                                        @min="add(item, index, 0)"></number>
                                 </div>
                             </div>
                         </plant>
@@ -45,7 +48,7 @@
                 <check-icon :value="chooseAll"
                     @click.native="setAll()"></check-icon>全选</div>
             <div class="total">合计:
-                <span>¥ 99999.99</span>
+                <span>¥ {{totalPrice}}</span>
             </div>
             <div class="button-container">结算</div>
         </div>
@@ -62,6 +65,7 @@ export default {
     data() {
         return {
             chooseAll: false,
+            totalPrice: 0,
         }
     },
     created() {
@@ -74,10 +78,13 @@ export default {
     },
     methods: {
         getImg(item) {
-            return item.pro_sku != null ? item.pro_sku.img : item.img
+            return item.pro_sku != null ? item.pro_sku.img : item.pro.img
+        },
+        getStock(item) {
+            return item.pro_sku != null ? item.pro_sku.stock : item.pro.stock
         },
         getPrice(item) {
-            return item.pro_sku != null ? item.pro_sku.price : item.price
+            return item.pro_sku != null ? item.pro_sku.price : item.pro.price
         },
         getSku(item) {
             return item.pro_sku != null ? item.pro_sku.name : ''
@@ -87,38 +94,41 @@ export default {
         },
         checked(item, index) {
             this.setCartChecked({ index: index, flag: !item.check })
-            for (const item of this.cart) {
-                if (item.check === false) {
-                    this.chooseAll = false
-                    return
-                }
-            }
-            this.chooseAll = true
         },
-        add(item, flag) {
-            console.log(item)
-            console.log(flag)
+        add(item, index, flag) {
+            if (flag == 0 && item.num <= 1) {
+                return
+            } else if (flag == 1 && item.num >= this.getStock(item)) {
+                return
+            }
+
+            this.cartChange({ cart_id: item.id, index, flag })
         },
         setAll() {
             this.cart.map((item, index) => {
                 this.setCartChecked({ index: index, flag: !this.chooseAll })
             })
         },
-        ...mapActions(['initCart']),
+        ...mapActions(['initCart', 'cartChange']),
         ...mapMutations({
-            setCartChecked: 'SET_CART_CHECKED'
+            setCartChecked: 'SET_CART_CHECKED',
         })
     },
     watch: {
         cart: {
             handler(newVal, oldVal) {
+                let price = 0
+                let chooseAll = true
                 for (const item of newVal) {
                     if (item.check === false) {
                         this.chooseAll = false
-                        return
+                        chooseAll = false
+                        continue
                     }
+                    price += this.getPrice(item) * item.num
                 }
-                this.chooseAll = true
+                this.totalPrice = price.toFixed(2)
+                this.chooseAll = chooseAll
             },
             deep: true
         },

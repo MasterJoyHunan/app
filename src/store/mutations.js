@@ -28,7 +28,7 @@ const mutations = {
     [types.JOIN_TO_CART](state, pro) {
         state.cart.push(pro)
     },
-    [types.JOIN_TO_CART](state, index) {
+    [types.DROP_TO_CART](state, index) {
         state.cart.splice(index, 1)
     },
     [types.CLEAR_CART](state) {
@@ -36,6 +36,9 @@ const mutations = {
     },
     [types.SET_CART_CHECKED](state, { index, flag }) {
         state.cart[index].check = flag
+    },
+    [types.CHANGE_CART_NUMBER](state, { index, flag }) {
+        flag === 0 ? state.cart[index].num-- : state.cart[index].num++
     }
 }
 
