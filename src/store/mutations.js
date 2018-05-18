@@ -33,6 +33,9 @@ const mutations = {
     },
     [types.CLEAR_CART](state) {
         state.cart = []
+    },
+    [types.SET_CART_CHECKED](state, { index, flag }) {
+        state.cart[index].check = flag
     }
 }
 

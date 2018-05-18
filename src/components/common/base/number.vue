@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-number">
+    <div class="mj-number">
         <div class="border"
             @click="doIng(0)"
             :style="{width:size+'px', height:size+'px', border: `1px solid ${nowMinColor}`}">
@@ -74,7 +74,7 @@ export default {
 </script>
 
 <style lang="less">
-.inline-number {
+.mj-number {
     display: flex;
     justify-content: center;
     align-items: center;
