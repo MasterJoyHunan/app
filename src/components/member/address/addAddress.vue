@@ -42,7 +42,8 @@ export default {
                 province: 0,
                 area: 0,
                 city: 0,
-                address: ''
+                address: '',
+                loading: false,
             },
             address: [],
         }
@@ -66,6 +67,10 @@ export default {
                 this.$vux.toast.text('输入的地址有误,请填写详细收货地址')
                 return
             }
+            if (this.loading) {
+                return
+            }
+            this.loading = true
             request({
                 url: '/api/address/addAddress',
                 method: 'post',
