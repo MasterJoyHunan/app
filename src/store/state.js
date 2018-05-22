@@ -7,5 +7,6 @@ const state = {
     user: {}, //用户信息
     cart: [],
     cartNum: 0,
+    addressList: [] // 用户地址信息
 }
 export default state

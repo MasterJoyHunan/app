@@ -23,20 +23,41 @@
                 v-model="form.address"></x-textarea>
         </group>
         <div class="submit"
+            v-if="$route.query.id"
+            @click="addAddress()">确认修改</div>
+        <div class="submit"
+            v-else
             @click="addAddress()">确认添加</div>
     </div>
 </template>
 
 <script>
 import { Group, XInput, XTextarea, XAddress } from 'vux'
+import { mapMutations } from 'vuex'
 import address from '@/components/common/js/cityData'
 import request from '@/components/common/js/request'
 export default {
     name: 'add-address',
+    created() {
+        if (this.$route.query.id) {
+            request({
+                url: '/api/address/getAddressDetail',
+                method: 'get',
+                params: { address_id: this.$route.query.id }
+            }).then(res => {
+                this.form = res.data
+                this.form.address_id = this.$route.query.id
+                this.address = [res.data.province_id + '', res.data.city_id + '', res.data.area_id + '']
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    },
     data() {
         return {
             addressData: address,
             form: {
+                address_id: '',
                 name: '',
                 tel: '',
                 province: 0,
@@ -76,11 +97,17 @@ export default {
                 method: 'post',
                 data: this.form,
             }).then(res => {
-                console.log(res)
+                if (this.form.address_id > 0) {
+                    this.editAddress({ address: res.data, index: this.$route.query.index })
+                } else {
+                    this.addNewAddress(res.data)
+                }
+                this.$router.back()
             }).catch(err => {
                 console.log(err)
             })
-        }
+        },
+        ...mapMutations({ addNewAddress: 'ADD_NEW_ADDRESS', editAddress: 'EDIT_ADDRESS' })
     },
     components: {
         Group, XInput, XTextarea, XAddress
@@ -88,7 +115,6 @@ export default {
     watch: {
         address(newVal) {
             [this.form.province, this.form.area, this.form.city] = [newVal[0], newVal[1], newVal[2]]
-            console.log(this.form.province, this.form.area, this.form.city)
         }
     }
 }

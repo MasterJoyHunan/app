@@ -5,6 +5,7 @@
                 v-for="(item, index) in cart"
                 :key="index">
                 <div class="menu-container"
+                    @click="handelDelete(item, index)"
                     slot="right-menu">
                     <swipeout-button class="delete-menu">
                         <svg-icon icon-class="delete"
@@ -50,7 +51,8 @@
             <div class="total">合计:
                 <span>¥ {{totalPrice}}</span>
             </div>
-            <div class="button-container">结算</div>
+            <div class="button-container"
+                @click="pay()">结算</div>
         </div>
     </div>
 </template>
@@ -60,6 +62,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { Swipeout, SwipeoutItem, SwipeoutButton, CheckIcon } from 'vux'
 import number from '@/components/common/base/number'
 import plant from '@/components/common/base/plant'
+import request from '@/components/common/js/request'
 export default {
     name: 'cart',
     data() {
@@ -77,24 +80,30 @@ export default {
         ...mapGetters(['cart'])
     },
     methods: {
+        // 计算属性, 获取图片
         getImg(item) {
             return item.pro_sku != null ? item.pro_sku.img : item.pro.img
         },
+        // 计算属性, 获取库存
         getStock(item) {
             return item.pro_sku != null ? item.pro_sku.stock : item.pro.stock
         },
         getPrice(item) {
             return item.pro_sku != null ? item.pro_sku.price : item.pro.price
         },
+        // 计算属性, 获取属性
         getSku(item) {
             return item.pro_sku != null ? item.pro_sku.name : ''
         },
+        // 跳转到商城
         gotoPro(id) {
             this.$router.push({ path: '/product', query: { id: id } })
         },
+        // vuex 选择购物车
         checked(item, index) {
             this.setCartChecked({ index: index, flag: !item.check })
         },
+        // 商品加减
         add(item, index, flag) {
             if (flag == 0 && item.num <= 1) {
                 return
@@ -104,14 +113,62 @@ export default {
 
             this.cartChange({ cart_id: item.id, index, flag })
         },
+        // 选择所有商品
         setAll() {
             this.cart.map((item, index) => {
                 this.setCartChecked({ index: index, flag: !this.chooseAll })
             })
         },
+        // 删除商品
+        handelDelete(item, index) {
+            const _this = this
+            this.$vux.confirm.show({
+                title: '警告',
+                content: '确认删除',
+                onConfirm() {
+                    request({
+                        url: '/api/cart/deleteCart',
+                        method: 'post',
+                        data: { cart_id: item.id }
+                    }).then(res => {
+                        _this.deleteCart(index)
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            })
+        },
+        // 结算
+        pay() {
+            const id = []
+            if (this.cart.length > 0) {
+                this.cart.map(item => {
+                    if (item.check) {
+                        id.push(item.id)
+                    }
+                })
+            }
+            if (id.length == 0) {
+                return
+            }
+            request({
+                url: '/api/order/cartSubmit',
+                method: 'post',
+                data: { id }
+            }).then(res => {
+                this.$router.push('/cartOrder')
+            }).catch(err => {
+                if (err.status == -1) {
+                    setTimeout(() => {
+                        this.$router.push('/addAddress')
+                    }, 1000)
+                }
+            })
+        },
         ...mapActions(['initCart', 'cartChange']),
         ...mapMutations({
             setCartChecked: 'SET_CART_CHECKED',
+            deleteCart: 'DELETE_CART'
         })
     },
     watch: {

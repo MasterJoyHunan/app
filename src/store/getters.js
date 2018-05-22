@@ -12,3 +12,4 @@ export const cartNum = state => {
     })
     return i
 }
+export const addressList = state => state.addressList

@@ -7,7 +7,8 @@
                 </div>
                 <p class="name">灭霸</p>
             </div>
-            <div class="setting">
+            <div class="setting"
+                @click="gotoUrl('/setting')">
                 <!-- <svg-icon icon-class="message"
                     color="#fff"
                     size="18"></svg-icon> -->
@@ -71,7 +72,7 @@
                         <svg-icon icon-class="express"
                             color="#8fcd34"
                             size="25"></svg-icon>
-                        <p>物流信息</p>
+                        <p>物流信息 (开发中)</p>
                     </div>
                     <div class="right">
                         <svg-icon icon-class="right"
@@ -84,7 +85,7 @@
                         <svg-icon icon-class="message"
                             color="#8fcd34"
                             size="25"></svg-icon>
-                        <p>消息中心</p>
+                        <p>消息中心 (开发中)</p>
                     </div>
                     <div class="right">
                         <svg-icon icon-class="right"
@@ -92,7 +93,8 @@
                             size="25"></svg-icon>
                     </div>
                 </div>
-                <div class="list">
+                <div class="list"
+                    @click="gotoUrl('/setting')">
                     <div class="left">
                         <svg-icon icon-class="setting"
                             color="#8fcd34"
@@ -110,7 +112,7 @@
                         <svg-icon icon-class="help"
                             color="#8fcd34"
                             size="25"></svg-icon>
-                        <p>帮助中心</p>
+                        <p>帮助中心 (开发中)</p>
                     </div>
                     <div class="right">
                         <svg-icon icon-class="right"
@@ -137,6 +139,8 @@ export default {
         if (Object.keys(this.user).length == 0) {
             this.reloadUser()
         }
+        // 获取地址信息
+        this.initAddress()
     },
     activated() {
         if (Object.keys(this.user).length == 0) {
@@ -147,7 +151,7 @@ export default {
         gotoUrl(url) {
             this.$router.push(url)
         },
-        ...mapActions(['get'])
+        ...mapActions(['initAddress'])
     },
     computed: {
         ...mapGetters(['user'])

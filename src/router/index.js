@@ -52,6 +52,18 @@ export default new Router({
                     }
                 },
                 {
+                    path: "cartOrder",
+                    name: "cartOrder",
+                    component: () => import("@/components/cart/order/index"),
+                    meta: {
+                        title: "订单提交",
+                        showTitle: true,
+                        // showBottom: true,
+                        showBack: true
+                        // keepAlive: true
+                    }
+                },
+                {
                     path: "member",
                     name: "member",
                     component: () => import("@/components/member/index"),
@@ -81,11 +93,24 @@ export default new Router({
                     component: () =>
                         import("@/components/member/address/addAddress"),
                     meta: {
-                        title: "添加收货地址",
+                        title: "编辑收货地址",
                         showTitle: true,
                         // showBottom: true,
-                        showBack: true,
-                        keepAlive: true
+                        showBack: true
+                        // keepAlive: true
+                    }
+                },
+                {
+                    path: "setting",
+                    name: "setting",
+                    component: () =>
+                        import("@/components/member/setting/index"),
+                    meta: {
+                        title: "设置",
+                        showTitle: true,
+                        // showBottom: true,
+                        showBack: true
+                        // keepAlive: true
                     }
                 }
             ]
