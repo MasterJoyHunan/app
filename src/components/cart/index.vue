@@ -21,12 +21,13 @@
                         <plant :item="item"
                             :img="getImg(item)"
                             back-color="#fff"
+                            @clickImg="gotoPro(item.pro_id)"
                             slot="content">
                             <div class="text-content"
                                 slot="content">
                                 <div class="content-box">
                                     <div class="title"
-                                        @click="gotoPro(item.id)">{{item.pro.title}}</div>
+                                        @click="gotoPro(item.pro_id)">{{item.pro.title}}</div>
                                     <div v-if="getSku(item)"
                                         class="sku">规格: {{getSku(item)}}</div>
                                     <div v-else> &nbsp;</div>

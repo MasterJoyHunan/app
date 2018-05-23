@@ -38,17 +38,32 @@
         <div class="total">
             <div class="price">共计: ¥{{totalPay}}</div>
             <div class="submit"
-                @click="pay()">付款</div>
+                @click="payFlag = true">付款</div>
         </div>
+        <x-dialog v-model="payFlag"
+            hide-on-blur>
+            <div class="pay">
+                <checklist label-position="right"
+                    required
+                    :options="options"
+                    :max="1"
+                    v-model="checklist"></checklist>
+                <div class="btn"
+                    @click="handelPay()">确定</div>
+            </div>
+        </x-dialog>
     </div>
 </template>
 
 <script>
 import request from '@/components/common/js/request'
 import plant from '@/components/common/base/plant'
+import { payWayMixin } from '@/components/common/js/mixin'
 import { mapActions } from 'vuex'
+import { XDialog, Checklist } from 'vux'
 export default {
     name: 'cart-order',
+    mixins: [payWayMixin],
     data() {
         return {
             address: {},
@@ -70,6 +85,7 @@ export default {
                 }, 1000)
                 return
             }
+            this.$router.back()
         })
     },
     methods: {
@@ -93,27 +109,28 @@ export default {
             this.$router.push('/address')
         },
         // 付款
-        pay() {
-            const _this = this
-            this.$vux.confirm.show({
-                title: '付款',
-                content: '确认付款',
-                onConfirm() {
-                    request({
-                        url: '/api/order/orderPay',
-                        method: 'post',
-                        data: { __token__: _this.__token__ }
-                    }).then(res => {
-                        _this.initCart()
-                        _this.$router.replace('/order')
-                    }).catch(err => {
-                        if (err.status === 0) {
-                            _this.initCart()
-                            _this.$router.replace('/order')
-                        }
-                        console.log(err)
-                    })
+        handelPay() {
+            this.payFlag = false
+            if (this.checklist.length == 0) {
+                return
+            }
+            if (this.checklist[0] == 2 || this.checklist[0] == 3) {
+                this.$vux.toast.text('线上支付正在开发中')
+                return
+            }
+            request({
+                url: '/api/order/orderPay',
+                method: 'post',
+                data: { __token__: this.__token__, pay_way: this.checklist[0] }
+            }).then(res => {
+                this.initCart()
+                this.$router.replace('/order')
+            }).catch(err => {
+                if (err.status == 0) {
+                    this.initCart()
+                    this.$router.replace('/order')
                 }
+                console.log(err)
             })
         },
         ...mapActions(['initCart'])
@@ -128,7 +145,9 @@ export default {
         }
     },
     components: {
-        plant
+        plant,
+        XDialog,
+        Checklist,
     }
 }
 </script>
@@ -215,6 +234,22 @@ export default {
             border-radius: 5px;
             color: #fff;
             background: linear-gradient(to right, #ffcc80, #ff9800);
+        }
+    }
+    .pay {
+        .weui-cell__bd {
+            padding-left: 20px;
+            text-align: left;
+        }
+        .btn {
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #04be02;
+            color: #fff;
+            margin: 10px 30px;
+            border-radius: 5px;
         }
     }
 }

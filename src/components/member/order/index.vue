@@ -55,13 +55,13 @@
                         @click="handelGetdetail(item.id)">查看订单</div>
                     <div class="btn"
                         v-if="item.status == 0"
-                        @click="handelCancel(item.id, index)">删除订单</div>
+                        @click="handelCancel(item.id, item.index)">删除订单</div>
                     <div class="btn"
                         v-if="item.status == 0"
-                        @click="handelBeforePay(item, index)">立即付款</div>
+                        @click="handelBeforePay(item, item.index)">立即付款</div>
                     <div class="btn"
                         v-if="item.status == 2"
-                        @click="handelGetOrder(item.id, index)">确认收货</div>
+                        @click="handelGetOrder(item.id, item.index)">确认收货</div>
                 </div>
             </div>
         </div>
@@ -99,15 +99,7 @@ export default {
         }
     },
     created() {
-        request({
-            url: '/api/order/index',
-        }).then(res => {
-            this.showLoading = false
-            this.total = res.data
-            this.itemChange(this.choose)
-        }).catch(err => {
-            console.log(err)
-        })
+        this._getData()
     },
     methods: {
         itemChange(index) {
@@ -197,6 +189,23 @@ export default {
             }).catch(err => {
                 console.log(err)
             })
+        },
+        // 获取用户数据
+        _getData() {
+            request({
+                url: '/api/order/index',
+            }).then(res => {
+                this.showLoading = false
+                if (res.data.length > 0) {
+                    res.data.map((item, index) => {
+                        item.index = index
+                    })
+                }
+                this.total = res.data
+                this.itemChange(this.choose)
+            }).catch(err => {
+                console.log(err)
+            })
         }
     },
     computed: {
@@ -250,6 +259,7 @@ export default {
                     width: 80px;
                     height: 80px;
                     margin: 5px 0;
+                    background-color: #f5f5f5;
                     img {
                         width: 100%;
                         height: 100%;

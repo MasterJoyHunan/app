@@ -11,6 +11,7 @@
                 v-for="(pro, index) in hotPro"
                 :key="index"
                 @clickPlant="proDetail(pro)"
+                @clickImg="proDetail(pro)"
                 back-color="#fff">
                 <div class="text-info"
                     slot="content">

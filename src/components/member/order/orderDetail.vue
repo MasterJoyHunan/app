@@ -5,19 +5,21 @@
             <div class="btn-container">
                 <div class="btn"
                     v-if="order.status == 0"
-                    @click="handelCancel(order.id, index)">删除订单</div>
+                    @click="handelCancel(order.id)">删除订单</div>
                 <div class="btn"
                     v-if="order.status == 0"
                     @click="payFlag = true">立即付款</div>
+                <div class="text" v-if="order.status == 1">等待商家发货</div>
                 <div class="btn"
                     v-if="order.status == 2"
                     @click="handelGetOrder(order.id)">确认收货</div>
+                    <div class="text" v-if="order.status == 3">订单已完成</div>
             </div>
         </div>
         <div class="address">
             <div class="name">
                 <div>收件人: {{order.post_name}}</div>
-                <div>TEL: {{order.post_tel}}</div>
+                <div>{{order.post_tel}}</div>
             </div>
             <div class="address-detail">
                 <div class="">{{order.post_address}}</div>
@@ -88,7 +90,7 @@
             </div>
             <div class="flex-between">
                 <span>快递单号:
-                    <span style="font-size: 12px;">(点击单号查看物流)</span>
+                    <span style="font-size: 12px;">(点击查看物流)</span>
                 </span>
                 <span class="express-no">{{order.express_no}}</span>
             </div>
@@ -122,7 +124,7 @@ export default {
                 info: []
             },
             payWay: { 1: '内置支付', 2: '线上支付' },
-            payFlag: false
+            payFlag: false,
         }
     },
     created() {
@@ -155,7 +157,7 @@ export default {
             })
         },
         // 取消订单
-        handelCancel(id, index) {
+        handelCancel(id) {
             const _this = this
             this.$vux.confirm.show({
                 title: '警告',
@@ -166,7 +168,7 @@ export default {
                         method: 'post',
                         data: { id }
                     }).then(res => {
-                        _this.total.splice(index, 1)
+                        _this.$router.back()
                     }).catch(err => {
                         console.log(err)
                     })
@@ -257,6 +259,9 @@ export default {
                 padding: 5px 10px;
                 margin-right: 10px;
             }
+            .text{
+                margin-right: 10px;
+            }
         }
     }
     .address {
@@ -284,6 +289,7 @@ export default {
                 width: 80px;
                 height: 80px;
                 margin: 5px 0;
+                background-color: #f5f5f5;
                 img {
                     width: 100%;
                     height: 100%;
