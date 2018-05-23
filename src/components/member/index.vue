@@ -20,31 +20,36 @@
         <div class="body">
             <div class="my-order">
                 <div class="order-icon">
-                    <div class="all">
+                    <div class="all"
+                        @click="gotoUrl('/order?id=-1')">
                         <svg-icon icon-class="order-all"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>全部</p>
                     </div>
-                    <div class="wait-pay">
+                    <div class="wait-pay"
+                        @click="gotoUrl('/order?id=0')">
                         <svg-icon icon-class="order-wait-pay"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>待付款</p>
                     </div>
-                    <div class="wait-send">
+                    <div class="wait-send"
+                        @click="gotoUrl('/order?id=1')">
                         <svg-icon icon-class="order-wait-send"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>待发货</p>
                     </div>
-                    <div class="send">
+                    <div class="send"
+                        @click="gotoUrl('/order?id=2')">
                         <svg-icon icon-class="order-send"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>发货中</p>
                     </div>
-                    <div class="finish">
+                    <div class="finish"
+                        @click="gotoUrl('/order?id=3')">
                         <svg-icon icon-class="order-finish"
                             size="30"
                             color="#8fcd34"></svg-icon>

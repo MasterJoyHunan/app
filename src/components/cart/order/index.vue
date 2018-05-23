@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="total">
-            <div class="price">共计: {{totalPay}}</div>
+            <div class="price">共计: ¥{{totalPay}}</div>
             <div class="submit"
                 @click="pay()">付款</div>
         </div>

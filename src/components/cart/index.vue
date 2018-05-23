@@ -72,6 +72,7 @@ export default {
         }
     },
     created() {
+        this.initAddress()
         if (this.cart.length == 0) {
             this.initCart()
         }
@@ -171,7 +172,7 @@ export default {
                 }
             })
         },
-        ...mapActions(['initCart', 'cartChange']),
+        ...mapActions(['initCart', 'cartChange', 'initAddress']),
         ...mapMutations({
             setCartChecked: 'SET_CART_CHECKED',
             deleteCart: 'DELETE_CART'
