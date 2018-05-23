@@ -75,6 +75,17 @@ export default new Router({
                     }
                 },
                 {
+                    path: "order",
+                    name: "order",
+                    component: () => import("@/components/member/order/index"),
+                    meta: {
+                        title: "订单列表",
+                        showTitle: true,
+                        // showBottom: true,
+                        // keepAlive: true
+                    }
+                },
+                {
                     path: "address",
                     name: "address",
                     component: () =>

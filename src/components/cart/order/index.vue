@@ -46,6 +46,7 @@
 <script>
 import request from '@/components/common/js/request'
 import plant from '@/components/common/base/plant'
+import { mapActions } from 'vuex'
 export default {
     name: 'cart-order',
     data() {
@@ -67,6 +68,7 @@ export default {
                 setTimeout(() => {
                     this.$router.push('/addAddress')
                 }, 1000)
+                return
             }
         })
     },
@@ -102,13 +104,19 @@ export default {
                         method: 'post',
                         data: { __token__: _this.__token__ }
                     }).then(res => {
+                        _this.initCart()
                         _this.$router.replace('/order')
                     }).catch(err => {
+                        if (err.status === 0) {
+                            _this.initCart()
+                            _this.$router.replace('/order')
+                        }
                         console.log(err)
                     })
                 }
             })
-        }
+        },
+        ...mapActions(['initCart'])
     },
     computed: {
         totalPay() {

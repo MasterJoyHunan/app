@@ -37,7 +37,9 @@ service.interceptors.response.use(
             router.push({ path: "/login" })
         }
         if (res.status !== 1) {
-            vue.$vux.toast.text(res.msg)
+            if (res.msg !== '') {
+                vue.$vux.toast.text(res.msg)
+            }
             return Promise.reject(response.data)
         }
         return response.data

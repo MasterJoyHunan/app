@@ -76,6 +76,12 @@ export default {
             this.initCart()
         }
     },
+    activated() {
+        if (this.cart.length == 0) {
+            this.chooseAll = false
+            this.totalPrice = 0
+        }
+    },
     computed: {
         ...mapGetters(['cart'])
     },
@@ -176,6 +182,9 @@ export default {
             handler(newVal, oldVal) {
                 let price = 0
                 let chooseAll = true
+                if (newVal.length == 0) {
+                    return
+                }
                 for (const item of newVal) {
                     if (item.check === false) {
                         this.chooseAll = false
