@@ -12,9 +12,20 @@
         </x-header>
         <div class="drawer"
             :class="{'show-drawer': showDrawer}">
+            <div @click="chooseCate({cate_id: ''})"
+                class="cate-item">
+                <div class="triangle-top-left"></div>
+                <div class="triangle-up"></div>
+                <div class="text">全部</div>
+            </div>
             <div @click="chooseCate(cate_item)"
+                class="cate-item"
                 v-for="(cate_item, index) in cate"
-                :key="index">{{cate_item.name}}</div>
+                :key="index">
+                <div class="triangle-top-left"></div>
+                <div class="triangle-up"></div>
+                <div class="text">{{cate_item.name}}</div>
+            </div>
         </div>
         <div class="mask"
             :class="{'show-mask': showDrawer}"
@@ -30,12 +41,20 @@
             @pullingDown="reset()"
             @pullingUp="loadMore()"
             @scroll="scrollChange">
-            <div @click="chooseCate()"
+            <div @click="choosePro()"
+                class="product-item"
                 v-for="(pro_item, index) in pro"
-                :key="index">{{pro_item.title}}</div>
-            <div @click="clickItem()"
-                v-for="(i,index) in tempList"
-                :key="index+ 100">{{i}}</div>
+                :key="index">
+                <div class="img" :style="{backgroundImage: `url(${thisImg(pro_item)})`}">
+                </div>
+                <div class="title">{{pro_item.title}}</div>
+                <div class="text">
+                    <div class="sales">999</div>
+                    <div class="price">88.00
+                        <span class="market-pric">100.00</span>
+                    </div>
+                </div>
+            </div>
             <div class="pull pullup"
                 v-show="showLoadMore">
                 <spinner type="ios-small"
@@ -57,6 +76,7 @@ export default {
     mixins: [pageMixin],
     data() {
         return {
+            cdn: process.env.CDN,
             showDrawer: false,
             title: '全部',
             cate: [],
@@ -140,6 +160,9 @@ export default {
                 this.$refs.scroll.finishPullUp()
             }, 500)
         },
+        thisImg(item) {
+            return (this.cdn + item.img).replace(/\\/g, "/")
+        },
         // 初始化数据
         _getData() {
             this._getPro()
@@ -190,6 +213,7 @@ export default {
 #cate {
     position: relative;
     padding-top: 46px;
+    background: #f4f2f4;
     height: ~"calc(100% - 46px)";
     .drawer {
         width: 60%;
@@ -201,6 +225,42 @@ export default {
         z-index: 2;
         transform: translateX(-100%);
         transition: all 500ms;
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
+        .cate-item {
+            flex: 1;
+            background-color: #64bb72;
+            color: #fff;
+            margin: 10px 5px;
+            line-height: 1em;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .triangle-top-left {
+                position: absolute;
+                top: -5px;
+                left: 0;
+                width: 0;
+                height: 0;
+                border-top: 38px solid #8cba34;
+                border-right: 38px solid transparent;
+            }
+            .triangle-up {
+                position: absolute;
+                top: -5px;
+                left: 33px;
+                width: 0;
+                height: 0;
+                border-bottom: 5px solid #64bb72;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+            }
+        }
     }
     .mask {
         position: absolute;
@@ -224,6 +284,23 @@ export default {
         overflow: hidden;
         transform: translateX(0);
         transition: all 500ms;
+        padding: 10px 10px 0 10px;
+        .product-item {
+            background-color: #fff;
+            box-shadow: 0 0 3px #ccc;
+            margin-bottom: 10px;
+            width: ~"calc(50% - 5px)";
+            display: inline-block;
+            font-size: 15px;
+            &:nth-child(2n){
+                margin-left: 10px;
+            }
+            .img {
+                width: 100%;
+                padding-bottom: 100%;
+                background-size: 100% 100%;
+            }
+        }
     }
     .show-content {
         transform: translateX(60%);
