@@ -9,8 +9,21 @@ export const payWayMixin = {
             ],
             checklist: []
         }
+    }
+}
+export const pageMixin = {
+    data() {
+        return {
+            current_page: 1, // 当前页
+            last_page: 0, // 后面还有多少页?
+            per_page: 10, // 每页条数
+            total: 0 // 数据总条数
+        }
     },
     methods: {
         // 每页显示条目改变
+        _getData() {
+            throw new Error("请先请求数据")
+        }
     }
 }
