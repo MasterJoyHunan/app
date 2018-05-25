@@ -2,16 +2,16 @@
     <transition name="order">
         <div id="order">
             <tab>
-                <tab-item @on-item-click="currendIndex = -1"
-                    :selected="currendIndex == -1">全部</tab-item>
-                <tab-item @on-item-click="currendIndex = 0"
-                    :selected="currendIndex == 0">待付款</tab-item>
-                <tab-item @on-item-click="currendIndex = 1"
-                    :selected="currendIndex == 1">待发货</tab-item>
-                <tab-item @on-item-click="currendIndex = 2"
-                    :selected="currendIndex == 2">发货中</tab-item>
-                <tab-item @on-item-click="currendIndex = 3"
-                    :selected="currendIndex == 3">完成</tab-item>
+                <tab-item @on-item-click="setIndex(-1)"
+                    :selected="order_current_index == -1">全部</tab-item>
+                <tab-item @on-item-click="setIndex(0)"
+                    :selected="order_current_index == 0">待付款</tab-item>
+                <tab-item @on-item-click="setIndex(1)"
+                    :selected="order_current_index == 1">待发货</tab-item>
+                <tab-item @on-item-click="setIndex(2)"
+                    :selected="order_current_index == 2">发货中</tab-item>
+                <tab-item @on-item-click="setIndex(3)"
+                    :selected="order_current_index == 3">完成</tab-item>
             </tab>
             <div class="order-list loading"
                 v-if="showLoading">
@@ -86,6 +86,7 @@
 import { Tab, TabItem, Spinner, XDialog, Checklist } from 'vux'
 import { payWayMixin } from '@/components/common/js/mixin'
 import request from '@/components/common/js/request'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
     name: 'order',
     mixins: [payWayMixin],
@@ -101,7 +102,6 @@ export default {
         }
     },
     created() {
-        this.currendIndex = this.$route.query.id || -1
         this._getData()
     },
     methods: {
@@ -205,20 +205,24 @@ export default {
                     })
                 }
                 this.total = res.data
-                this.itemChange(this.choose)
+                this.itemChange(this.order_current_index)
             }).catch(err => {
                 console.log(err)
             })
-        }
+        },
+        ...mapMutations({ setIndex: 'SET_ORDER_CURRENT_INDEX' })
+    },
+    computed: {
+        ...mapGetters(['order_current_index'])
     },
     watch: {
         total: {
             handler(newVal) {
-                this.itemChange(this.currendIndex)
+                this.itemChange(this.order_current_index)
             },
             deep: true
         },
-        currendIndex(newVal) {
+        order_current_index(newVal) {
             this.itemChange(newVal)
         },
     },

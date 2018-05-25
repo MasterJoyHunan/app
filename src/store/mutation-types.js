@@ -22,5 +22,8 @@ export const DELETE_ADDRESS = "DELETE_ADDRESS"
 export const EDIT_ADDRESS = "EDIT_ADDRESS"
 export const SET_ADDRESS_DEFAULT = "SET_ADDRESS_DEFAULT"
 
+// 订单相关
+export const SET_ORDER_CURRENT_INDEX = "SET_ORDER_CURRENT_INDEX"
+
 // 退出登录
 export const LOGOUT = "LOGOUT"

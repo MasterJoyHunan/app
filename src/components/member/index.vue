@@ -21,35 +21,35 @@
             <div class="my-order">
                 <div class="order-icon">
                     <div class="all"
-                        @click="gotoUrl('/order?id=-1')">
+                        @click="gotoUrl('/order', -1)">
                         <svg-icon icon-class="order-all"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>全部</p>
                     </div>
                     <div class="wait-pay"
-                        @click="gotoUrl('/order?id=0')">
+                        @click="gotoUrl('/order', 0)">
                         <svg-icon icon-class="order-wait-pay"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>待付款</p>
                     </div>
                     <div class="wait-send"
-                        @click="gotoUrl('/order?id=1')">
+                        @click="gotoUrl('/order', 1)">
                         <svg-icon icon-class="order-wait-send"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>待发货</p>
                     </div>
                     <div class="send"
-                        @click="gotoUrl('/order?id=2')">
+                        @click="gotoUrl('/order', 2)">
                         <svg-icon icon-class="order-send"
                             size="30"
                             color="#8fcd34"></svg-icon>
                         <p>发货中</p>
                     </div>
                     <div class="finish"
-                        @click="gotoUrl('/order?id=3')">
+                        @click="gotoUrl('/order', 3)">
                         <svg-icon icon-class="order-finish"
                             size="30"
                             color="#8fcd34"></svg-icon>
@@ -132,7 +132,7 @@
 
 <script>
 // import request from '@/components/common/js/request'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
     name: 'member',
     data() {
@@ -153,10 +153,14 @@ export default {
         }
     },
     methods: {
-        gotoUrl(url) {
+        gotoUrl(url, index) {
+            if (index !== 'undefined') {
+                this.setIndex(index)
+            }
             this.$router.push(url)
         },
-        ...mapActions(['initAddress'])
+        ...mapActions(['initAddress']),
+        ...mapMutations({ setIndex: 'SET_ORDER_CURRENT_INDEX' })
     },
     computed: {
         ...mapGetters(['user'])

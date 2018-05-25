@@ -78,6 +78,11 @@ const mutations = {
         vue.set(state.addressList, index, address)
     },
 
+    // 订单相关
+    [types.SET_ORDER_CURRENT_INDEX](state, index) {
+        state.order_current_index = index
+    },
+
     // 退出登录.初始化
     [types.LOGOUT](state) {
         state.user = {} //用户信息

@@ -61,7 +61,7 @@
 import request from '@/components/common/js/request'
 import plant from '@/components/common/base/plant'
 import { payWayMixin } from '@/components/common/js/mixin'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import { XDialog, Checklist } from 'vux'
 export default {
     name: 'cart-order',
@@ -126,16 +126,19 @@ export default {
                 data: { __token__: this.__token__, pay_way: this.checklist[0] }
             }).then(res => {
                 this.initCart()
+                this.setIndex(1)
                 this.$router.replace('/order')
             }).catch(err => {
                 if (err.status == 0) {
                     this.initCart()
+                    this.setIndex(0)
                     this.$router.replace('/order')
                 }
                 console.log(err)
             })
         },
-        ...mapActions(['initCart'])
+        ...mapActions(['initCart']),
+        ...mapMutations({ setIndex: 'SET_ORDER_CURRENT_INDEX' })
     },
     computed: {
         totalPay() {

@@ -13,3 +13,4 @@ export const cartNum = state => {
     return i
 }
 export const addressList = state => state.addressList
+export const order_current_index = state => state.order_current_index

@@ -71,6 +71,7 @@ export default new Router({
                         title: "订单列表",
                         showTitle: true,
                         showBack: true
+                        // keepAlive: true,
                     }
                 },
                 {
