@@ -220,7 +220,6 @@ export default {
     position: relative;
     .vux-swipeout {
         height: 90%;
-        overflow: scroll;
         .pro-container {
             font-size: 15px;
             display: flex;

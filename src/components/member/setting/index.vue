@@ -1,17 +1,19 @@
 <template>
-    <div id="setting">
-        <div class="img-box">
-            <div class="img">
-                <img src="./headerimg.png">
+    <transition name="setting">
+        <div id="setting">
+            <div class="img-box">
+                <div class="img">
+                    <img src="./headerimg.png">
+                </div>
             </div>
+            <div class="text-content">
+                <div class="name">灭霸</div>
+                <div class="tel">13212345678</div>
+            </div>
+            <div class="logout"
+                @click="logout()">退出登录</div>
         </div>
-        <div class="text-content">
-            <div class="name">灭霸</div>
-            <div class="tel">13212345678</div>
-        </div>
-        <div class="logout"
-            @click="logout()">退出登录</div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -35,6 +37,20 @@ export default {
 </script>
 
 <style lang="less">
+// 进入动画
+.setting-enter-active {
+    transition: all 0.3s;
+}
+.setting-enter {
+    transform: translateX(100%);
+}
+// 离开动画
+.setting-leave-active {
+    transition: all 0.3s linear;
+}
+.setting-leave-to {
+    transform: translateY(100%);
+}
 #setting {
     width: 100%;
     height: 100%;

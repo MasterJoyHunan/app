@@ -1,45 +1,47 @@
 <template>
-    <div id="address-list">
-        <div class="not-address"
-            v-if="addressList.length == 0">
-            <svg-icon icon-class="address"
-                color="#dc7433"
-                size="100"></svg-icon>
-            <p class="text">暂时没有添加地址</p>
-            <div class="add-new-address"
-                @click="addnew">添加新的地址</div>
-        </div>
-        <div class="address-list"
-            v-else>
-            <div class="address"
-                v-for="(item, index) in addressList"
-                :key="index">
-                <div class="name">
-                    <span>{{item.name}}</span>
-                    <span>{{item.tel}}</span>
-                </div>
-                <div class="address-detail">{{item.province}},{{item.city}},{{item.area}},{{item.address}}</div>
-                <div class="action">
-                    <div v-if="item.is_default == 1">默认地址</div>
-                    <div v-else
-                        @click="handelSetDefault(item, index)">
-                        <check-icon></check-icon>设为默认</div>
-                    <div class="action-btn">
-                        <div class="btn"
-                            @click="handelEdit(item, index)">
-                            <svg-icon size="15"
-                                icon-class="edit"></svg-icon>修改</div>
-                        <div class="btn"
-                            @click="handelDelete(item, index)">
-                            <svg-icon size="15"
-                                icon-class="delete"></svg-icon>删除</div>
+    <transition name="address-list">
+        <div id="address-list">
+            <div class="not-address"
+                v-if="addressList.length == 0">
+                <svg-icon icon-class="address"
+                    color="#dc7433"
+                    size="100"></svg-icon>
+                <p class="text">暂时没有添加地址</p>
+                <div class="add-new-address"
+                    @click="addnew">添加新的地址</div>
+            </div>
+            <div class="address-list"
+                v-else>
+                <div class="address"
+                    v-for="(item, index) in addressList"
+                    :key="index">
+                    <div class="name">
+                        <span>{{item.name}}</span>
+                        <span>{{item.tel}}</span>
+                    </div>
+                    <div class="address-detail">{{item.province}},{{item.city}},{{item.area}},{{item.address}}</div>
+                    <div class="action">
+                        <div v-if="item.is_default == 1">默认地址</div>
+                        <div v-else
+                            @click="handelSetDefault(item, index)">
+                            <check-icon></check-icon>设为默认</div>
+                        <div class="action-btn">
+                            <div class="btn"
+                                @click="handelEdit(item, index)">
+                                <svg-icon size="15"
+                                    icon-class="edit"></svg-icon>修改</div>
+                            <div class="btn"
+                                @click="handelDelete(item, index)">
+                                <svg-icon size="15"
+                                    icon-class="delete"></svg-icon>删除</div>
+                        </div>
                     </div>
                 </div>
+                <div class="add-new-address2"
+                    @click="addnew">添加新的地址</div>
             </div>
-            <div class="add-new-address2"
-                @click="addnew">添加新的地址</div>
         </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -116,6 +118,20 @@ export default {
 </script>
 
 <style lang="less">
+// 进入动画
+.address-list-enter-active {
+    transition: all 0.3s;
+}
+.address-list-enter {
+    transform: translateX(100%);
+}
+// 离开动画
+.address-list-leave-active {
+    transition: all 0.3s linear;
+}
+.address-list-leave-to {
+    transform: translateY(100%);
+}
 #address-list {
     width: 100%;
     height: 100%;

@@ -1,107 +1,116 @@
 <template>
-    <div id="detail">
-        <div class="info">
-            <p class="title">{{product.title}}</p>
-            <p class="price">¥{{product.price}}
-                <span>¥{{product.market_price}}</span>
-            </p>
-        </div>
-        <swiper loop
-            auto
-            dots-position="center"
-            :show-dots="banner.length > 1 ? true : false"
-            :show-desc-mask="false"
-            class="swiper"
-            height="padding-bottom: 40%">
-            <swiper-item class="swiper-img"
-                v-for="(item, index) in banner"
-                :key="index">
-                <img :src="item">
-            </swiper-item>
-        </swiper>
-        <div class="divider">商品详情</div>
-        <div class="description"
-            v-html="product.desc"></div>
-        <div class="choose-sku-masker"
-            v-show="buyPlant">
-            <div class="plant"
-                ref="plant">
-                <div class="close"
-                    @click="close()">
-                    <svg-icon icon-class="close"
-                        size="30"></svg-icon>
+    <transition name="detail">
+        <div id="detail">
+            <div class="back"
+                @click="back()">
+                <svg-icon icon-class="back"
+                    size="20"
+                    color="#fff"></svg-icon>
+            </div>
+            <div class="info">
+                <p class="title">{{product.title}}</p>
+                <p class="price">¥{{product.price}}
+                    <span>¥{{product.market_price}}</span>
+                </p>
+            </div>
+            <swiper loop
+                auto
+                dots-position="center"
+                :show-dots="banner.length > 1 ? true : false"
+                :show-desc-mask="false"
+                class="swiper"
+                height="padding-bottom: 40%">
+                <swiper-item class="swiper-img"
+                    v-for="(item, index) in banner"
+                    :key="index">
+                    <img :src="item">
+                </swiper-item>
+            </swiper>
+            <div class="divider">商品详情</div>
+            <div class="description"
+                v-html="product.desc"></div>
+            <div class="choose-sku-masker"
+                :class="{'show-choose-sku-masker': buyPlant}">
+                <div class="plant"
+                    :class="{'show-plant': buyPlant}"
+                    ref="plant">
+                    <div class="close"
+                        @click="close()">
+                        <svg-icon icon-class="close"
+                            size="30"></svg-icon>
+                    </div>
+                    <div class="top vux-1px-b">
+                        <div class="img">
+                            <img :src="cdn + miniImg"
+                                alt="">
+                        </div>
+                        <div class="content">
+                            <p class="price">¥ {{price}}</p>
+                            <p class="stock">库存 {{stock}} 件</p>
+                            <p class="sales">销量 {{sales}} 件</p>
+                        </div>
+                    </div>
+                    <div class="body"
+                        ref="body">
+                        <div class="sku vux-1px-b"
+                            v-show="sku1.length > 0">
+                            <checker v-model="chooseSku1"
+                                radio-required
+                                @on-change="resetInfo()"
+                                type="radio"
+                                default-item-class="sku-item"
+                                selected-item-class="sku-item-selected">
+                                <checker-item :value="item"
+                                    v-for="(item, index) in sku1"
+                                    :key="index">{{item.name}}</checker-item>
+                            </checker>
+                        </div>
+                        <div class="sku vux-1px-b"
+                            v-show="sku2.length > 0">
+                            <checker v-model="chooseSku2"
+                                radio-required
+                                @on-change="resetInfo()"
+                                type="radio"
+                                default-item-class="sku-item"
+                                selected-item-class="sku-item-selected">
+                                <checker-item :value="item"
+                                    v-for="(item, index) in sku2"
+                                    :key="index">{{item.name}}</checker-item>
+                            </checker>
+                        </div>
+                        <div class="buy-num">
+                            <p>购买数量</p>
+                            <inline-x-number button-style="round"
+                                :min="1"
+                                :max="stock"
+                                v-model="buyNum"></inline-x-number>
+                        </div>
+                    </div>
+                    <div class="button"
+                        ref="submitBtn"
+                        :style="{backgroundColor: buyDisable ? '#ccc' : '#ff0036'}"
+                        @click="onSubmit()">{{buyFlag == 1 ? '立即购买' : '加入购物车'}}</div>
                 </div>
-                <div class="top vux-1px-b">
-                    <div class="img">
-                        <img :src="cdn + miniImg"
-                            alt="">
-                    </div>
-                    <div class="content">
-                        <p class="price">¥ {{price}}</p>
-                        <p class="stock">库存 {{stock}} 件</p>
-                        <p class="sales">销量 {{sales}} 件</p>
-                    </div>
+            </div>
+            <div class="bottom">
+                <div class="cart"
+                    @click="gotoCart()">
+                    <svg-icon icon-class="cart2"
+                        color="52b983"
+                        size="40"></svg-icon>
+                    <badge class="badge"
+                        v-if="cartNum > 0"
+                        :text="cartNum"></badge>
                 </div>
-                <div class="body"
-                    ref="body">
-                    <div class="sku vux-1px-b"
-                        v-show="sku1.length > 0">
-                        <checker v-model="chooseSku1"
-                            radio-required
-                            @on-change="resetInfo()"
-                            type="radio"
-                            default-item-class="sku-item"
-                            selected-item-class="sku-item-selected">
-                            <checker-item :value="item"
-                                v-for="(item, index) in sku1"
-                                :key="index">{{item.name}}</checker-item>
-                        </checker>
-                    </div>
-                    <div class="sku vux-1px-b"
-                        v-show="sku2.length > 0">
-                        <checker v-model="chooseSku2"
-                            radio-required
-                            @on-change="resetInfo()"
-                            type="radio"
-                            default-item-class="sku-item"
-                            selected-item-class="sku-item-selected">
-                            <checker-item :value="item"
-                                v-for="(item, index) in sku2"
-                                :key="index">{{item.name}}</checker-item>
-                        </checker>
-                    </div>
-                    <div class="buy-num">
-                        <p>购买数量</p>
-                        <inline-x-number button-style="round"
-                            :min="1"
-                            :max="stock"
-                            v-model="buyNum"></inline-x-number>
-                    </div>
+                <div class="buy">
+                    <div class="put-cart"
+                        @click="buyNow(0)">加入购物车</div>
+                    <div class="buy-now"
+                        @click="buyNow(1)">立即购买</div>
                 </div>
-                <div class="button"
-                    ref="submitBtn"
-                    :style="{backgroundColor: buyDisable ? '#ccc' : '#ff0036'}"
-                    @click="onSubmit()">确定</div>
             </div>
         </div>
-        <div class="bottom">
-            <div class="cart"
-                @click="gotoCart()">
-                <svg-icon icon-class="cart2"
-                    color="52b983"
-                    size="40"></svg-icon>
-                <badge class="badge"
-                    v-if="cartNum > 0"
-                    :text="cartNum"></badge>
-            </div>
-            <div class="buy">
-                <div class="put-cart"
-                    @click="putCart()">加入购物车</div>
-                <div class="buy-now"
-                    @click="buyNow()">立即购买</div>
-            </div>
-        </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -129,12 +138,17 @@ export default {
             sales: 0,
             pro_sku_id: 0,
             buyDisable: false,
+            buyFlag: 0, // 0加入购物车, 1立即购买
         }
     },
     created() {
         this._getData()
     },
     methods: {
+        // 返回
+        back() {
+            this.$router.back()
+        },
         //filter方法
         trueImgUrl(url) {
             return cdn + trueImgUrl(url)
@@ -144,14 +158,10 @@ export default {
             this.$router.push('/cart')
         },
         // 加入到购物车
-        putCart() {
+        // 加入到购物车/立即购买
+        buyNow(flag) {
             this.buyPlant = true
-            console.log('put')
-        },
-        // 立即购买
-        buyNow() {
-            this.buyPlant = true
-            console.log('buy')
+            this.buyFlag = flag
         },
         // 关闭购买
         close() {
@@ -165,10 +175,13 @@ export default {
             request({
                 url: "/api/cart/addToCart",
                 method: 'post',
-                data: { pro_id: this.product.id, num: this.buyNum, pro_sku_id: this.pro_sku_id }
+                data: { pro_id: this.product.id, num: this.buyNum, pro_sku_id: this.pro_sku_id, buy_now: this.buyFlag }
             }).then(res => {
                 this.initCart()
                 this.buyPlant = false
+                if (this.buyFlag === 1) {
+                    this.$router.push('/cartOrder')
+                }
             }).catch(err => {
                 console.log(err)
             })
@@ -287,8 +300,36 @@ export default {
 
 <style lang="less">
 @import "~vux/src/styles/1px.less";
+// 进入动画
+.detail-enter-active {
+    transition: all 0.3s;
+}
+.detail-enter {
+    transform: translateX(100%);
+}
+// 离开动画
+.detail-leave-active {
+    transition: all 0.3s;
+}
+.detail-leave-to {
+    transform: translateX(100%);
+}
+
 #detail {
     padding-bottom: 53px;
+    min-height: ~"calc(100% - 53px)";
+    .back {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .swiper {
         .vux-swiper {
             padding-bottom: 40% !important;
@@ -351,7 +392,8 @@ export default {
         left: 0;
         right: 0;
         background-color: rgba(204, 204, 204, 0.8);
-        z-index: 2;
+        z-index: -1;
+        opacity: 0;
         .plant {
             position: absolute;
             bottom: 0;
@@ -361,6 +403,8 @@ export default {
             max-height: 80%;
             padding-bottom: 53px;
             background-color: #fff;
+            transition: all 0.5s;
+            opacity: 0;
             .close {
                 position: absolute;
                 right: 10px;
@@ -436,6 +480,13 @@ export default {
                 align-items: center;
             }
         }
+        .show-plant {
+            opacity: 1;
+        }
+    }
+    .show-choose-sku-masker {
+        opacity: 1;
+        z-index: 2;
     }
     .bottom {
         width: 100%;

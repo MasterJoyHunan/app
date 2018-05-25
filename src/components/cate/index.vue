@@ -12,7 +12,7 @@
         </x-header>
         <div class="drawer"
             :class="{'show-drawer': showDrawer}">
-            <div @click="chooseCate({cate_id: ''})"
+            <div @click="chooseCate({id: '', name: '全部'})"
                 class="cate-item">
                 <div class="triangle-top-left"></div>
                 <div class="triangle-up"></div>
@@ -41,17 +41,20 @@
             @pullingDown="reset()"
             @pullingUp="loadMore()"
             @scroll="scrollChange">
-            <div @click="choosePro()"
+            <div @click="choosePro(pro_item)"
                 class="product-item"
                 v-for="(pro_item, index) in pro"
                 :key="index">
-                <div class="img" :style="{backgroundImage: `url(${thisImg(pro_item)})`}">
+                <div class="img"
+                    :style="{backgroundImage: `url(${thisImg(pro_item)})`}">
                 </div>
-                <div class="title">{{pro_item.title}}</div>
-                <div class="text">
-                    <div class="sales">999</div>
-                    <div class="price">88.00
-                        <span class="market-pric">100.00</span>
+                <div class="text-container">
+                    <div class="title">{{pro_item.title}}</div>
+                    <div class="text">
+                        <div class="sales">销量 : {{pro_item.sales_volume}}</div>
+                        <div class="price">¥ {{pro_item.price}}
+                            <span class="market-price">{{pro_item.market_price}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,8 +106,9 @@ export default {
             this._getPro()
             this.showDrawer = false
         },
-        clickItem() {
-            this.showDrawer = false
+        // 选择商品
+        choosePro(item) {
+            this.$router.push('/product?id=' + item.id)
         },
         // 打开分类菜单
         showMore() {
@@ -287,18 +291,35 @@ export default {
         padding: 10px 10px 0 10px;
         .product-item {
             background-color: #fff;
-            box-shadow: 0 0 3px #ccc;
+            box-shadow: 0 0 3px #000;
             margin-bottom: 10px;
             width: ~"calc(50% - 5px)";
             display: inline-block;
-            font-size: 15px;
-            &:nth-child(2n){
+            &:nth-child(2n) {
                 margin-left: 10px;
             }
             .img {
                 width: 100%;
                 padding-bottom: 100%;
                 background-size: 100% 100%;
+            }
+            .text-container {
+                font-size: 14px;
+                padding: 0 5px;
+                .title {
+                    font-size: 15px;
+                    height: 48px;
+                    overflow: hidden;
+                }
+                .price {
+                    color: red;
+                    .market-price {
+                        font-size: 12px;
+                        color: #ddd;
+                        vertical-align: top;
+                        text-decoration: line-through;
+                    }
+                }
             }
         }
     }

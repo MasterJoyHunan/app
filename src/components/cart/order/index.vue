@@ -1,58 +1,60 @@
 <template>
-    <div id="cart-order">
-        <div class="main">
-            <div class="address">
-                <div class="left">
-                    <div class="name">
-                        <span>收货人: {{address.name}}</span>
-                        <span>{{address.tel}}</span>
+    <transition name="cart-order">
+        <div id="cart-order">
+            <div class="main">
+                <div class="address">
+                    <div class="left">
+                        <div class="name">
+                            <span>收货人: {{address.name}}</span>
+                            <span>{{address.tel}}</span>
+                        </div>
+                        <div class="address-detail">{{address.province}},{{address.city}},{{address.area}},{{address.address}}</div>
                     </div>
-                    <div class="address-detail">{{address.province}},{{address.city}},{{address.area}},{{address.address}}</div>
-                </div>
-                <div class="right"
-                    @click="chooseAddress()">
-                    <svg-icon icon-class="right2"
-                        color="#fff"
-                        size="30"></svg-icon>
-                </div>
-            </div>
-            <div class="bar"></div>
-            <div class="product-list">
-                <plant v-for="(item, index) in pro"
-                    :key="index"
-                    back-color="#fff"
-                    :img="getImg(item)">
-                    <div class="text-content"
-                        slot="content">
-                        <div class="name">{{item.pro.title}}</div>
-                        <div class="sku"
-                            v-if="getSku(item)">属性: {{getSku(item)}}</div>
-                        <div class="sku"
-                            v-else>&nbsp;</div>
-                        <div class="num">{{getPrice(item)}} x {{item.num}}</div>
-                        <div class="item-total">小计: {{(getPrice(item) * item.num).toFixed(2)}}</div>
+                    <div class="right"
+                        @click="chooseAddress()">
+                        <svg-icon icon-class="right2"
+                            color="#fff"
+                            size="30"></svg-icon>
                     </div>
-                </plant>
+                </div>
+                <div class="bar"></div>
+                <div class="product-list">
+                    <plant v-for="(item, index) in pro"
+                        :key="index"
+                        back-color="#fff"
+                        :img="getImg(item)">
+                        <div class="text-content"
+                            slot="content">
+                            <div class="name">{{item.pro.title}}</div>
+                            <div class="sku"
+                                v-if="getSku(item)">属性: {{getSku(item)}}</div>
+                            <div class="sku"
+                                v-else>&nbsp;</div>
+                            <div class="num">{{getPrice(item)}} x {{item.num}}</div>
+                            <div class="item-total">小计: {{(getPrice(item) * item.num).toFixed(2)}}</div>
+                        </div>
+                    </plant>
+                </div>
             </div>
-        </div>
-        <div class="total">
-            <div class="price">共计: ¥{{totalPay}}</div>
-            <div class="submit"
-                @click="payFlag = true">付款</div>
-        </div>
-        <x-dialog v-model="payFlag"
-            hide-on-blur>
-            <div class="pay">
-                <checklist label-position="right"
-                    required
-                    :options="options"
-                    :max="1"
-                    v-model="checklist"></checklist>
-                <div class="btn"
-                    @click="handelPay()">确定</div>
+            <div class="total">
+                <div class="price">共计: ¥{{totalPay}}</div>
+                <div class="submit"
+                    @click="payFlag = true">付款</div>
             </div>
-        </x-dialog>
-    </div>
+            <x-dialog v-model="payFlag"
+                hide-on-blur>
+                <div class="pay">
+                    <checklist label-position="right"
+                        required
+                        :options="options"
+                        :max="1"
+                        v-model="checklist"></checklist>
+                    <div class="btn"
+                        @click="handelPay()">确定</div>
+                </div>
+            </x-dialog>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -153,6 +155,20 @@ export default {
 </script>
 
 <style lang="less">
+// 进入动画
+.cart-order-enter-active {
+    transition: all 0.3s;
+}
+.cart-order-enter {
+    transform: translateX(100%);
+}
+// 离开动画
+.cart-order-leave-active {
+    transition: all 0.3s linear;
+}
+.cart-order-leave-to {
+    transform: translateY(100%);
+}
 #cart-order {
     width: 100%;
     height: 100%;

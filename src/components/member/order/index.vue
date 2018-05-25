@@ -1,83 +1,85 @@
 <template>
-    <div id="order">
-        <tab>
-            <tab-item @on-item-click="currendIndex = -1"
-                :selected="choose == -1">全部</tab-item>
-            <tab-item @on-item-click="currendIndex = 0"
-                :selected="choose == 0">待付款</tab-item>
-            <tab-item @on-item-click="currendIndex = 1"
-                :selected="choose == 1">待发货</tab-item>
-            <tab-item @on-item-click="currendIndex = 2"
-                :selected="choose == 2">发货中</tab-item>
-            <tab-item @on-item-click="currendIndex = 3"
-                :selected="choose == 3">完成</tab-item>
-        </tab>
-        <div class="order-list loading"
-            v-if="showLoading">
-            <div class="loading">
-                <spinner type="bubbles"
-                    size="40px"></spinner>
-                <div class="text">加载中...</div>
+    <transition name="order">
+        <div id="order">
+            <tab>
+                <tab-item @on-item-click="currendIndex = -1"
+                    :selected="currendIndex == -1">全部</tab-item>
+                <tab-item @on-item-click="currendIndex = 0"
+                    :selected="currendIndex == 0">待付款</tab-item>
+                <tab-item @on-item-click="currendIndex = 1"
+                    :selected="currendIndex == 1">待发货</tab-item>
+                <tab-item @on-item-click="currendIndex = 2"
+                    :selected="currendIndex == 2">发货中</tab-item>
+                <tab-item @on-item-click="currendIndex = 3"
+                    :selected="currendIndex == 3">完成</tab-item>
+            </tab>
+            <div class="order-list loading"
+                v-if="showLoading">
+                <div class="loading">
+                    <spinner type="bubbles"
+                        size="40px"></spinner>
+                    <div class="text">加载中...</div>
+                </div>
             </div>
+            <div class="order-list"
+                v-else>
+                <div class="order-item"
+                    v-for="(item, index) in showList"
+                    :key="index">
+                    <div class="header">
+                        <div class="no">订单编号: {{item.no}}</div>
+                        <div class="label">{{label(item.status)}}</div>
+                    </div>
+                    <div class="content"
+                        v-for="(info, i) in item.info"
+                        :key="i">
+                        <div class="img">
+                            <img :src="cdn + info.img">
+                        </div>
+                        <div class="text">
+                            <div class="title">{{info.name}}</div>
+                            <div class="sku"
+                                v-if="info.name_ext">属性 : {{info.name_ext}}</div>
+                            <div class="sku"
+                                v-else>&nbsp;</div>
+                        </div>
+                        <div class="info">
+                            <div class="price">{{info.price}}</div>
+                            <div class="num">x {{info.num}}</div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        共 {{item.info.length}} 件商品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计: ¥{{item.amount}}
+                    </div>
+                    <div class="action">
+                        <div class="btn"
+                            @click="handelGetdetail(item.id)">查看订单</div>
+                        <div class="btn"
+                            v-if="item.status == 0"
+                            @click="handelCancel(item.id, item.index)">删除订单</div>
+                        <div class="btn"
+                            v-if="item.status == 0"
+                            @click="handelBeforePay(item, item.index)">立即付款</div>
+                        <div class="btn"
+                            v-if="item.status == 2"
+                            @click="handelGetOrder(item.id, item.index)">确认收货</div>
+                    </div>
+                </div>
+            </div>
+            <x-dialog v-model="payFlag"
+                hide-on-blur>
+                <div class="pay">
+                    <checklist label-position="right"
+                        required
+                        :options="options"
+                        :max="1"
+                        v-model="checklist"></checklist>
+                    <div class="btn"
+                        @click="handelPay()">确定</div>
+                </div>
+            </x-dialog>
         </div>
-        <div class="order-list"
-            v-else>
-            <div class="order-item"
-                v-for="(item, index) in showList"
-                :key="index">
-                <div class="header">
-                    <div class="no">订单编号: {{item.no}}</div>
-                    <div class="label">{{label(item.status)}}</div>
-                </div>
-                <div class="content"
-                    v-for="(info, i) in item.info"
-                    :key="i">
-                    <div class="img">
-                        <img :src="cdn + info.img">
-                    </div>
-                    <div class="text">
-                        <div class="title">{{info.name}}</div>
-                        <div class="sku"
-                            v-if="info.name_ext">属性 : {{info.name_ext}}</div>
-                        <div class="sku"
-                            v-else>&nbsp;</div>
-                    </div>
-                    <div class="info">
-                        <div class="price">{{info.price}}</div>
-                        <div class="num">x {{info.num}}</div>
-                    </div>
-                </div>
-                <div class="footer">
-                    共 {{item.info.length}} 件商品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计: ¥{{item.amount}}
-                </div>
-                <div class="action">
-                    <div class="btn"
-                        @click="handelGetdetail(item.id)">查看订单</div>
-                    <div class="btn"
-                        v-if="item.status == 0"
-                        @click="handelCancel(item.id, item.index)">删除订单</div>
-                    <div class="btn"
-                        v-if="item.status == 0"
-                        @click="handelBeforePay(item, item.index)">立即付款</div>
-                    <div class="btn"
-                        v-if="item.status == 2"
-                        @click="handelGetOrder(item.id, item.index)">确认收货</div>
-                </div>
-            </div>
-        </div>
-        <x-dialog v-model="payFlag"
-            hide-on-blur>
-            <div class="pay">
-                <checklist label-position="right"
-                    required
-                    :options="options"
-                    :max="1"
-                    v-model="checklist"></checklist>
-                <div class="btn"
-                    @click="handelPay()">确定</div>
-            </div>
-        </x-dialog>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -99,6 +101,7 @@ export default {
         }
     },
     created() {
+        this.currendIndex = this.$route.query.id || -1
         this._getData()
     },
     methods: {
@@ -208,11 +211,6 @@ export default {
             })
         }
     },
-    computed: {
-        choose() {
-            return this.$route.query.id || -1
-        },
-    },
     watch: {
         total: {
             handler(newVal) {
@@ -236,6 +234,20 @@ export default {
 </script>
 
 <style lang="less">
+// 进入动画
+.order-enter-active {
+    transition: all 0.3s;
+}
+.order-enter {
+    transform: translateX(100%);
+}
+// 离开动画
+.order-leave-active {
+    transition: all 0.3s linear;
+}
+.order-leave-to {
+    transform: translateY(100%);
+}
 #order {
     height: 100%;
     .order-list {
