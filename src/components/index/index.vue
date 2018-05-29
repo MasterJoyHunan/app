@@ -1,9 +1,14 @@
 <template>
     <div id="shop">
-        <swiper :list="banner"
-            loop
+        <swiper loop
             auto
-            :aspect-ratio="500/800">
+            :show-desc-mask="false"
+            class="swiper">
+            <swiper-item class="swiper-img"
+                v-for="(item, index) in ad"
+                :key="index">
+                <img :src="cdn + item.img">
+            </swiper-item>
         </swiper>
         <div class="cate"></div>
         <div class="product-container">
@@ -28,7 +33,7 @@
 </template>
 
 <script>
-import { Swiper } from 'vux'
+import { Swiper, SwiperItem } from 'vux'
 import request from '@/components/common/js/request'
 import plant from '@/components/common/base/plant'
 const cdn = process.env.CDN
@@ -79,13 +84,25 @@ export default {
     },
     components: {
         Swiper,
-        plant
+        plant,
+        SwiperItem
     }
 }
 </script>
 
 <style lang="less">
 #shop {
+    .swiper {
+        .vux-swiper {
+            padding-bottom: 10% !important;
+        }
+        .swiper-img {
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
     .product-container {
         padding: 0 10px;
         .product {
