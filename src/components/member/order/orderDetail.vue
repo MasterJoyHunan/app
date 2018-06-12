@@ -147,7 +147,7 @@ export default {
                 return
             }
             request({
-                url: '/api/order/payOrder',
+                url: '/shop/order/payOrder',
                 method: 'post',
                 data: { id: this.order.id, pay_way: this.checklist[0] }
             }).then(res => {
@@ -164,7 +164,7 @@ export default {
                 content: '确认取消订单',
                 onConfirm() {
                     request({
-                        url: '/api/order/cancelOrder',
+                        url: '/shop/order/cancelOrder',
                         method: 'post',
                         data: { id }
                     }).then(res => {
@@ -183,7 +183,7 @@ export default {
                 content: '是否确认收到货物',
                 onConfirm() {
                     request({
-                        url: '/api/order/getOrder',
+                        url: '/shop/order/getOrder',
                         method: 'post',
                         data: { id }
                     }).then(res => {
@@ -199,7 +199,7 @@ export default {
         // 获取订单数据
         _getData() {
             request({
-                url: '/api/order/getOrderDetail',
+                url: '/shop/order/getOrderDetail',
                 params: { id: this.$route.query.id }
             }).then(res => {
                 this.order = res.data

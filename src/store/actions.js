@@ -2,7 +2,7 @@ import * as types from "./mutation-types"
 import request from "@/components/common/js/request"
 
 export const reloadUser = ({ commit }) => {
-    request({ url: "/api/user/index" })
+    request({ url: "/shop/user/index" })
         .then(res => {
             commit(types.SET_USER_INFO, res.data.user)
         })
@@ -12,7 +12,7 @@ export const reloadUser = ({ commit }) => {
 }
 
 export const initCart = ({ commit }) => {
-    request({ url: "/api/cart/index" })
+    request({ url: "/shop/cart/index" })
         .then(res => {
             commit(types.INIT_CART, res.data ? res.data : [])
         })
@@ -23,7 +23,7 @@ export const initCart = ({ commit }) => {
 
 export const cartChange = ({ commit }, { cart_id, index, flag }) => {
     request({
-        url: "/api/cart/changeCartNumber",
+        url: "/shop/cart/changeCartNumber",
         method: "post",
         data: {
             cart_id,
@@ -40,7 +40,7 @@ export const cartChange = ({ commit }, { cart_id, index, flag }) => {
 
 export const initAddress = ({ commit }) => {
     request({
-        url: "/api/address/index",
+        url: "/shop/address/index",
         method: "get"
     })
         .then(res => {

@@ -75,7 +75,7 @@ export default {
                 content: '是否确认删除',
                 onConfirm() {
                     request({
-                        url: '/api/address/deleteAddress',
+                        url: '/shop/address/deleteAddress',
                         method: 'post',
                         data: { address_id: item.id }
                     }).then(res => {
@@ -94,7 +94,7 @@ export default {
                 content: '是否将其设为默认地址',
                 onConfirm() {
                     request({
-                        url: '/api/address/setDefault',
+                        url: '/shop/address/setDefault',
                         method: 'post',
                         data: { address_id: item.id }
                     }).then(res => {

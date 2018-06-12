@@ -8,7 +8,7 @@ router.beforeEach((to, from, next) => {
     } else {
         if (Object.keys(store.state.user).length === 0) {
             request({
-                url: '/api/user/index'
+                url: '/shop/user/index'
             }).then(res => {
                 if (res.status == 1) {
                     store.commit('SET_USER_INFO', res.data.user)

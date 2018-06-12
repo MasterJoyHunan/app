@@ -41,7 +41,7 @@ export default {
     created() {
         if (this.$route.query.id) {
             request({
-                url: '/api/address/getAddressDetail',
+                url: '/shop/address/getAddressDetail',
                 method: 'get',
                 params: { address_id: this.$route.query.id }
             }).then(res => {
@@ -93,7 +93,7 @@ export default {
             }
             this.loading = true
             request({
-                url: '/api/address/addAddress',
+                url: '/shop/address/addAddress',
                 method: 'post',
                 data: this.form,
             }).then(res => {

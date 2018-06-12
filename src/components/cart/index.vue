@@ -135,7 +135,7 @@ export default {
                 content: '确认删除',
                 onConfirm() {
                     request({
-                        url: '/api/cart/deleteCart',
+                        url: '/shop/cart/deleteCart',
                         method: 'post',
                         data: { cart_id: item.id }
                     }).then(res => {
@@ -160,7 +160,7 @@ export default {
                 return
             }
             request({
-                url: '/api/order/cartSubmit',
+                url: '/shop/order/cartSubmit',
                 method: 'post',
                 data: { id }
             }).then(res => {

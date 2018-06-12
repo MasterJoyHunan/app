@@ -24,7 +24,7 @@ export default {
     methods: {
         logout() {
             request({
-                url: "/api/login/logout",
+                url: "/shop/login/logout",
                 method: "post",
             }).then(res => {
                 this.$router.push('/login')

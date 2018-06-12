@@ -44,7 +44,7 @@ export default {
     methods: {
         doLogin() {
             request({
-                url: '/api/login/index',
+                url: '/shop/login/index',
                 method: 'post',
                 data: this.info
             }).then(res => {

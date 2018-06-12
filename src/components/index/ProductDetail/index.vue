@@ -173,7 +173,7 @@ export default {
                 return
             }
             request({
-                url: "/api/cart/addToCart",
+                url: "/shop/cart/addToCart",
                 method: 'post',
                 data: { pro_id: this.product.id, num: this.buyNum, pro_sku_id: this.pro_sku_id, buy_now: this.buyFlag }
             }).then(res => {
@@ -232,7 +232,7 @@ export default {
         // 获取数据
         _getData() {
             request({
-                url: '/api/shop/getProductDetail',
+                url: '/shop/shop/getProductDetail',
                 method: 'get',
                 params: { id: this.$route.query.id }
             }).then(res => {

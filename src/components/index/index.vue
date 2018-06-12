@@ -61,7 +61,7 @@ export default {
     },
     created() {
         request({
-            url: '/api/shop/index',
+            url: '/shop/shop/index',
             methods: 'get'
         }).then(res => {
             // this.banner = res.data.banner

@@ -145,7 +145,7 @@ export default {
                 // 上拉加载完成之后 会到最初的位子
                 this.query.page++
                 request({
-                    url: '/api/shop/getAllProduct',
+                    url: '/shop/shop/getAllProduct',
                     method: 'get',
                     params: this.query
                 }).then(res => {
@@ -175,7 +175,7 @@ export default {
         // 获取商品数据
         _getPro() {
             request({
-                url: '/api/shop/getAllProduct',
+                url: '/shop/shop/getAllProduct',
                 method: 'get',
                 params: this.query
             }).then(res => {
@@ -190,7 +190,7 @@ export default {
         // 获取分类数据
         _getCate() {
             request({
-                url: '/api/shop/getAllCate'
+                url: '/shop/shop/getAllCate'
             }).then(res => {
                 this.cate = res.data
             }).catch(err => {

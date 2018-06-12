@@ -130,7 +130,7 @@ export default {
                 content: '确认取消订单',
                 onConfirm() {
                     request({
-                        url: '/api/order/cancelOrder',
+                        url: '/shop/order/cancelOrder',
                         method: 'post',
                         data: { id }
                     }).then(res => {
@@ -149,7 +149,7 @@ export default {
                 content: '是否确认收到货物',
                 onConfirm() {
                     request({
-                        url: '/api/order/getOrder',
+                        url: '/shop/order/getOrder',
                         method: 'post',
                         data: { id }
                     }).then(res => {
@@ -183,7 +183,7 @@ export default {
                 return
             }
             request({
-                url: '/api/order/payOrder',
+                url: '/shop/order/payOrder',
                 method: 'post',
                 data: { id: this.tempItem.id, pay_way: this.checklist[0] }
             }).then(res => {
@@ -196,7 +196,7 @@ export default {
         // 获取用户数据
         _getData() {
             request({
-                url: '/api/order/index',
+                url: '/shop/order/index',
             }).then(res => {
                 this.showLoading = false
                 if (res.data.length > 0) {

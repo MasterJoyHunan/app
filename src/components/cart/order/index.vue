@@ -75,7 +75,7 @@ export default {
     },
     created() {
         request({
-            url: '/api/order/getChooseGoods',
+            url: '/shop/order/getChooseGoods',
             method: 'get'
         }).then(res => {
             [this.address, this.pro, this.__token__] = [res.data.address, res.data.goods, res.data.__token__]
@@ -121,7 +121,7 @@ export default {
                 return
             }
             request({
-                url: '/api/order/orderPay',
+                url: '/shop/order/orderPay',
                 method: 'post',
                 data: { __token__: this.__token__, pay_way: this.checklist[0] }
             }).then(res => {
